@@ -1,0 +1,137 @@
+{
+ "schema": 1,
+ "s_id": "s3",
+ "cap": "S3",
+ "as_of": "2026-09-30",
+ "data_end": "2026-09-30",
+ "n_days_total": 84,
+ "n_unresolved": 6,
+ "n_min_trust": 30,
+ "method": {
+  "premium": "个股自身 pct 累加（含市场 beta；与 S1 市场调整 CAR 口径不同属，禁混读）",
+  "residual": "窗口任一日缺行情该票剔除该窗（残窗不入库）",
+  "grouping": "v1 = 阶段×温度；行级明细保留结构全字段可再分组",
+  "stage_gate": "证据门三栏（必要/辅助/反向），阈值 = params.s3_rules；周期语义=阶段是状态、门是转换：转换门未命中且前值有阶段 → 状态延续（维持前值，断链即 UNRESOLVED，不跨缺口外推）"
+ },
+ "groups": {
+  "UNRESOLVED": {
+   "n_days": 6,
+   "premium_t1_mean_pct": 0.573,
+   "premium_t3_mean_pct": -1.396,
+   "sample_ok": false,
+   "by_temp": {
+    "温": {
+     "n_days": 6,
+     "premium_t1_mean_pct": 0.573
+    }
+   }
+  },
+  "冰点": {
+   "n_days": 8,
+   "premium_t1_mean_pct": 1.362,
+   "premium_t3_mean_pct": -0.396,
+   "sample_ok": false,
+   "by_temp": {
+    "冷": {
+     "n_days": 3,
+     "premium_t1_mean_pct": 0.243
+    },
+    "温": {
+     "n_days": 5,
+     "premium_t1_mean_pct": 2.034
+    }
+   }
+  },
+  "分歧": {
+   "n_days": 17,
+   "premium_t1_mean_pct": 1.789,
+   "premium_t3_mean_pct": 2.683,
+   "sample_ok": false,
+   "by_temp": {
+    "冷": {
+     "n_days": 4,
+     "premium_t1_mean_pct": 1.564
+    },
+    "温": {
+     "n_days": 11,
+     "premium_t1_mean_pct": 1.373
+    },
+    "热": {
+     "n_days": 2,
+     "premium_t1_mean_pct": 4.521
+    }
+   }
+  },
+  "发酵": {
+   "n_days": 23,
+   "premium_t1_mean_pct": 1.509,
+   "premium_t3_mean_pct": 0.766,
+   "sample_ok": false,
+   "by_temp": {
+    "温": {
+     "n_days": 16,
+     "premium_t1_mean_pct": 1.357
+    },
+    "热": {
+     "n_days": 7,
+     "premium_t1_mean_pct": 1.855
+    }
+   }
+  },
+  "启动": {
+   "n_days": 6,
+   "premium_t1_mean_pct": 0.554,
+   "premium_t3_mean_pct": -2.685,
+   "sample_ok": false,
+   "by_temp": {
+    "温": {
+     "n_days": 1,
+     "premium_t1_mean_pct": -2.641
+    },
+    "热": {
+     "n_days": 5,
+     "premium_t1_mean_pct": 1.193
+    }
+   }
+  },
+  "退潮": {
+   "n_days": 16,
+   "premium_t1_mean_pct": 1.351,
+   "premium_t3_mean_pct": 1.927,
+   "sample_ok": false,
+   "by_temp": {
+    "冷": {
+     "n_days": 3,
+     "premium_t1_mean_pct": 0.665
+    },
+    "温": {
+     "n_days": 13,
+     "premium_t1_mean_pct": 1.51
+    }
+   }
+  },
+  "高潮": {
+   "n_days": 7,
+   "premium_t1_mean_pct": 0.432,
+   "premium_t3_mean_pct": 1.405,
+   "sample_ok": false,
+   "by_temp": {
+    "温": {
+     "n_days": 4,
+     "premium_t1_mean_pct": -0.18
+    },
+    "热": {
+     "n_days": 3,
+     "premium_t1_mean_pct": 1.247
+    }
+   }
+  }
+ },
+ "provenance": {
+  "built_at": "2026-10-10",
+  "source": "旧包 klines.csv + zt_matrix（只读外部输入）",
+  "gate": "X1 提案 data/generated/reports/s3_backfill/summary.json 人工核对后晋升",
+  "check": "tools/analysis/s3.py --history-check 复算对账（reproduced 判据）",
+  "warning": "全部格子 n_days<30 → sample_ok=False，只作证据行查看，禁出统计结论"
+ }
+}

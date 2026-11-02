@@ -1,0 +1,812 @@
+{
+ "schema": "s1_effect_base",
+ "version": "1.1.0",
+ "as_of": "2026-09-21",
+ "description": "F7 企业事件效应库（S1 事件催化评估的知识真源）· 匹配对照净效应基准表",
+ "source": {
+  "origin": "旧包 F7 事件研究课题（2026-09-21 全量实测 · 用户立项）",
+  "report": "炒股智能体_旧包_20261008/data/generated/event_study/F7_企业事件效应_实测报告.md",
+  "matched_table": "同目录 evt_matched_report.md §3（事件类 × 匹配对照净效应）",
+  "raw_detail": "同目录 evt_detail.csv（61,980 事件包明细 · 19.7MB · 原地保留未搬运）",
+  "taxonomy_origin": "炒股智能体_旧包_20261008/tools/search/evt_taxonomy.py（官方 226 类 → 研究类映射）",
+  "period": "2026-01 ~ 2026-08 完整 8 个月",
+  "funnel": "455,146 条公告 → 78,928 事件包 → 61,980 可用（剔 T+20 窗口不完整者；evt_report.md 口径）",
+  "funnel_vs_table_note": "§3 匹配对照表 32 类 n 合计 = 45,963 ≠ 61,980：61,980 是全部事件包（含中性/未归类类）；45,963 是进入分档匹配对照的 32 类子集（同档无事件对照不足者剔除）。两类口径并存，categories.n 加总只会等于 45,963，不得与 funnel 混读",
+  "significance": "*** t≥2.6 | ** t≥2.0 | * t≥1.65（双侧近似）",
+  "transcribed": "本表逐条数字转录自 matched_table §3，未做任何改写；strength 分数禁止手抄，由 s1.py 按 strength_rule 现场重算",
+  "audit_20261009": "机器逐项对照 32/32 类 × 4 字段（n/event_fut20/net_effect/control）零误差；direction_prior 32/32 与 evt_taxonomy.CAT_MAP 一致；月度翻转 31/29 与 evt_robust_report.md §B 实测行数一致（实测报告 L292 的『32 中 30』为旧包文档自身笔误，以 robust §B 数据文件为准）"
+ },
+ "benchmark": {
+  "event_base_rate_pct": 0.36,
+  "note": "公告股 vs 无公告股自带 +0.36% 正漂移（32 类中 21 类净效应为正）——一切净效应必须相对该基准读，不能相对 0",
+  "benchmark_method": "等权均值（禁中位数：收益右偏会造 +0.302%/日 假超额，曾令 31 类全『利好』通过自检）",
+  "ar_definition": "AR = 个股日涨幅 − 全市场等权均值；CAR(k) = Σ AR over [T0, T0+k)，累加",
+  "window": "T+20 为主窗（T0 = 公告日 D 之后首个交易日；仅窗口完整时计入）",
+  "universe_rule": "基准 universe 必须与采样 universe 一致（混入新股曾造 −0.4% 假负）"
+ },
+ "n_min_trust": 30,
+ "n_min_trust_note": "只信 n≥30 的格子（报告全局口径）；n<30 的类只报告样本不足，不出统计结论",
+ "coverage": {
+  "taxonomy_classes": "evt_taxonomy.CAT_MAP 非中性映射目标 = 35 类 + KW 兜底独有『立案调查』= 36 类",
+  "matched_table_classes": "本表 32 类 = 实测中进入匹配对照分析的类",
+  "no_matched_rows": [
+   "控制权变更",
+   "高管变更",
+   "业绩说明会"
+  ],
+  "no_matched_rows_note": "3 类在 CAT_MAP 有映射、evt_report.md 有实测行（控制权变更 n=61、高管变更 n=50）但不在 §3 匹配对照表（分档对照样本不足未列入）——运行时归类到这 3 类 → historical_effect=NO_RECORD → strength 恒 UNKNOWN，安全降级不编造",
+  "benchmark_count_note": "『32 类中 21 类净效应为正』的 32 指本表类数；旧包文档多处混用 31/32（31 为早期分类版口径），数字引用以本表与 robust §B 数据文件为准"
+ },
+ "strength_rule": {
+  "formula": "dev = |net_effect_20d − 0.36|；dev>=2.5 → 4 | 1.0<=dev<2.5 → 3 | 0.4<=dev<1.0 → 2 | dev<0.4 → 1；n<100 封顶 3",
+  "mapping": {
+   "4": "强",
+   "3": "中",
+   "2": "弱",
+   "1": "微"
+  },
+  "grade_source": "旧包 EV_CAT_BASE 推导口径（|净效应 − +0.36% 基准|），由脚本推导、禁止手抄",
+  "semantics": "strength = 历史实证催化强度档位（与净效应符号无关，符号看 net_effect_20d）；confidence = 本次归类/匹配/判断可信度，两者分开"
+ },
+ "evidence_grade_rule": {
+  "A": "n >= 1000（大样本，结论最稳）",
+  "B": "300 <= n < 1000",
+  "C": "30 <= n < 300（可信但薄，禁单独下注）",
+  "D": "n < 30（不达 n_min_trust，只报 INSUFFICIENT_SAMPLES）"
+ },
+ "adjudication": {
+  "matched_control": "匹配对照是唯一可用于决策的量（同时控制均值回归与关注度漂移）",
+  "placebo_role": "安慰剂（pre vs post 同号且 post 幅度 <= pre）→ 只是趋势延续，否决事件解释（典型：停复牌 pre +10.06% vs post +4.72%）",
+  "naive_role": "朴素 post 只读现象形态（跳空/日内/时长），不用来定方向"
+ },
+ "categories": {
+  "询价转让": {
+   "n": 66,
+   "event_fut20_pct": 2.94,
+   "net_effect_20d_pct": 3.43,
+   "control_fut20_pct": -0.48,
+   "direction_prior": -1,
+   "note": "先验利空被实测推翻：最大正效应类",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.545,
+     "k5": 2.124,
+     "k20": 2.735
+    },
+    "n_valid": {
+     "k1": 71,
+     "k5": 71,
+     "k20": 70
+    },
+    "n_events": 71,
+    "sample_ok": true
+   }
+  },
+  "增持": {
+   "n": 457,
+   "event_fut20_pct": 2.89,
+   "net_effect_20d_pct": 2.98,
+   "control_fut20_pct": -0.09,
+   "direction_prior": 1,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.107,
+     "k5": 0.021,
+     "k20": 1.51
+    },
+    "n_valid": {
+     "k1": 611,
+     "k5": 611,
+     "k20": 579
+    },
+    "n_events": 611,
+    "sample_ok": true
+   }
+  },
+  "可转债": {
+   "n": 449,
+   "event_fut20_pct": 2.81,
+   "net_effect_20d_pct": 2.94,
+   "control_fut20_pct": -0.13,
+   "direction_prior": 0,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.218,
+     "k5": 1.11,
+     "k20": 2.339
+    },
+    "n_valid": {
+     "k1": 523,
+     "k5": 523,
+     "k20": 512
+    },
+    "n_events": 523,
+    "sample_ok": true
+   }
+  },
+  "股权激励": {
+   "n": 1428,
+   "event_fut20_pct": 2.46,
+   "net_effect_20d_pct": 2.59,
+   "control_fut20_pct": -0.12,
+   "direction_prior": 1,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.234,
+     "k5": 0.634,
+     "k20": 1.86
+    },
+    "n_valid": {
+     "k1": 1977,
+     "k5": 1977,
+     "k20": 1816
+    },
+    "n_events": 1977,
+    "sample_ok": true
+   }
+  },
+  "债权人通知": {
+   "n": 146,
+   "event_fut20_pct": 2.37,
+   "net_effect_20d_pct": 2.49,
+   "control_fut20_pct": -0.11,
+   "direction_prior": -1,
+   "note": "先验利空被实测推翻",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.104,
+     "k5": 0.106,
+     "k20": 1.742
+    },
+    "n_valid": {
+     "k1": 219,
+     "k5": 219,
+     "k20": 195
+    },
+    "n_events": 219,
+    "sample_ok": true
+   }
+  },
+  "回购": {
+   "n": 3448,
+   "event_fut20_pct": 1.7,
+   "net_effect_20d_pct": 1.76,
+   "control_fut20_pct": -0.06,
+   "direction_prior": 1,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.174,
+     "k5": 0.274,
+     "k20": 1.126
+    },
+    "n_valid": {
+     "k1": 4610,
+     "k5": 4608,
+     "k20": 4249
+    },
+    "n_events": 4610,
+    "sample_ok": true
+   }
+  },
+  "停复牌": {
+   "n": 82,
+   "event_fut20_pct": 0.92,
+   "net_effect_20d_pct": 1.7,
+   "control_fut20_pct": -0.78,
+   "direction_prior": 0,
+   "note": "n=82 且安慰剂显示 pre +10.06% vs post +4.72% → 大半是趋势延续，禁当事件效应读",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 2.447,
+     "k5": 4.65,
+     "k20": 1.308
+    },
+    "n_valid": {
+     "k1": 350,
+     "k5": 350,
+     "k20": 329
+    },
+    "n_events": 350,
+    "sample_ok": true
+   }
+  },
+  "员工持股": {
+   "n": 675,
+   "event_fut20_pct": 1.61,
+   "net_effect_20d_pct": 1.66,
+   "control_fut20_pct": -0.06,
+   "direction_prior": 1,
+   "note": "去月均值后同号月 7/8（最稳类之一）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.116,
+     "k5": 0.521,
+     "k20": 1.393
+    },
+    "n_valid": {
+     "k1": 949,
+     "k5": 949,
+     "k20": 888
+    },
+    "n_events": 949,
+    "sample_ok": true
+   }
+  },
+  "再融资": {
+   "n": 1243,
+   "event_fut20_pct": 1.12,
+   "net_effect_20d_pct": 1.25,
+   "control_fut20_pct": -0.13,
+   "direction_prior": -1,
+   "note": "先验利空被实测推翻",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.025,
+     "k5": 0.288,
+     "k20": 0.939
+    },
+    "n_valid": {
+     "k1": 1751,
+     "k5": 1751,
+     "k20": 1579
+    },
+    "n_events": 1751,
+    "sample_ok": true
+   }
+  },
+  "业绩预告": {
+   "n": 3369,
+   "event_fut20_pct": 1.02,
+   "net_effect_20d_pct": 1.11,
+   "control_fut20_pct": -0.08,
+   "direction_prior": 1,
+   "note": "去月均值后同号月 3/4",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.134,
+     "k5": -0.097,
+     "k20": 0.707
+    },
+    "n_valid": {
+     "k1": 4330,
+     "k5": 4330,
+     "k20": 4316
+    },
+    "n_events": 4330,
+    "sample_ok": true
+   }
+  },
+  "解禁": {
+   "n": 824,
+   "event_fut20_pct": 0.93,
+   "net_effect_20d_pct": 1.06,
+   "control_fut20_pct": -0.14,
+   "direction_prior": -1,
+   "note": "先验利空被实测推翻",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.156,
+     "k5": 0.202,
+     "k20": 1.045
+    },
+    "n_valid": {
+     "k1": 1078,
+     "k5": 1078,
+     "k20": 1021
+    },
+    "n_events": 1078,
+    "sample_ok": true
+   }
+  },
+  "处罚": {
+   "n": 77,
+   "event_fut20_pct": 0.79,
+   "net_effect_20d_pct": 0.96,
+   "control_fut20_pct": -0.17,
+   "direction_prior": -1,
+   "note": "先验利空被实测推翻；n=77 薄样本",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.349,
+     "k5": -0.758,
+     "k20": -0.201
+    },
+    "n_valid": {
+     "k1": 158,
+     "k5": 158,
+     "k20": 137
+    },
+    "n_events": 158,
+    "sample_ok": true
+   }
+  },
+  "权益变动": {
+   "n": 1519,
+   "event_fut20_pct": 0.56,
+   "net_effect_20d_pct": 0.76,
+   "control_fut20_pct": -0.2,
+   "direction_prior": 0,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.227,
+     "k5": 0.649,
+     "k20": 0.657
+    },
+    "n_valid": {
+     "k1": 2061,
+     "k5": 2061,
+     "k20": 1942
+    },
+    "n_events": 2061,
+    "sample_ok": true
+   }
+  },
+  "订单合同": {
+   "n": 1422,
+   "event_fut20_pct": 0.42,
+   "net_effect_20d_pct": 0.54,
+   "control_fut20_pct": -0.11,
+   "direction_prior": 1,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.086,
+     "k5": -0.142,
+     "k20": -0.129
+    },
+    "n_valid": {
+     "k1": 1943,
+     "k5": 1943,
+     "k20": 1803
+    },
+    "n_events": 1943,
+    "sample_ok": true
+   }
+  },
+  "分红": {
+   "n": 8179,
+   "event_fut20_pct": 0.39,
+   "net_effect_20d_pct": 0.45,
+   "control_fut20_pct": -0.06,
+   "direction_prior": 1,
+   "note": "只比基准高 +0.09%，弱",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.032,
+     "k5": 0.055,
+     "k20": 0.39
+    },
+    "n_valid": {
+     "k1": 10213,
+     "k5": 10213,
+     "k20": 9973
+    },
+    "n_events": 10213,
+    "sample_ok": true
+   }
+  },
+  "质押冻结": {
+   "n": 2595,
+   "event_fut20_pct": 0.31,
+   "net_effect_20d_pct": 0.43,
+   "control_fut20_pct": -0.11,
+   "direction_prior": -1,
+   "note": "先验利空被实测推翻；去月均值后同号月 6/8",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.02,
+     "k5": 0.224,
+     "k20": 0.435
+    },
+    "n_valid": {
+     "k1": 3452,
+     "k5": 3452,
+     "k20": 3237
+    },
+    "n_events": 3452,
+    "sample_ok": true
+   }
+  },
+  "收购重组": {
+   "n": 1605,
+   "event_fut20_pct": 0.21,
+   "net_effect_20d_pct": 0.3,
+   "control_fut20_pct": -0.09,
+   "direction_prior": 1,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.048,
+     "k5": -0.015,
+     "k20": 0.005
+    },
+    "n_valid": {
+     "k1": 2236,
+     "k5": 2236,
+     "k20": 2079
+    },
+    "n_events": 2236,
+    "sample_ok": true
+   }
+  },
+  "减持": {
+   "n": 2687,
+   "event_fut20_pct": -0.1,
+   "net_effect_20d_pct": 0.07,
+   "control_fut20_pct": -0.18,
+   "direction_prior": -1,
+   "note": "≈基准率，不是信号",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.163,
+     "k5": 0.326,
+     "k20": 0.308
+    },
+    "n_valid": {
+     "k1": 3249,
+     "k5": 3249,
+     "k20": 3119
+    },
+    "n_events": 3249,
+    "sample_ok": true
+   }
+  },
+  "对外投资": {
+   "n": 1524,
+   "event_fut20_pct": -0.04,
+   "net_effect_20d_pct": 0.04,
+   "control_fut20_pct": -0.07,
+   "direction_prior": 1,
+   "note": "≈基准率；去月均值后同号月 6/8（−0.34%）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.025,
+     "k5": -0.305,
+     "k20": -0.042
+    },
+    "n_valid": {
+     "k1": 2116,
+     "k5": 2116,
+     "k20": 1940
+    },
+    "n_events": 2116,
+    "sample_ok": true
+   }
+  },
+  "担保": {
+   "n": 4274,
+   "event_fut20_pct": -0.15,
+   "net_effect_20d_pct": -0.06,
+   "control_fut20_pct": -0.09,
+   "direction_prior": -1,
+   "note": "≈基准率，程序性弱负桶成员",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.001,
+     "k5": 0.15,
+     "k20": -0.057
+    },
+    "n_valid": {
+     "k1": 5956,
+     "k5": 5956,
+     "k20": 5532
+    },
+    "n_events": 5956,
+    "sample_ok": true
+   }
+  },
+  "关联交易": {
+   "n": 1356,
+   "event_fut20_pct": -0.18,
+   "net_effect_20d_pct": -0.15,
+   "control_fut20_pct": -0.03,
+   "direction_prior": 0,
+   "note": "程序性弱负桶成员（12,924 个程序性公告 T+20 −0.79%）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.005,
+     "k5": -0.069,
+     "k20": -0.136
+    },
+    "n_valid": {
+     "k1": 1988,
+     "k5": 1988,
+     "k20": 1889
+    },
+    "n_events": 1988,
+    "sample_ok": true
+   }
+  },
+  "业绩快报": {
+   "n": 342,
+   "event_fut20_pct": -0.42,
+   "net_effect_20d_pct": -0.38,
+   "control_fut20_pct": -0.04,
+   "direction_prior": 1,
+   "note": "先验利好被实测推翻：无效应",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.015,
+     "k5": -0.784,
+     "k20": -1.225
+    },
+    "n_valid": {
+     "k1": 785,
+     "k5": 785,
+     "k20": 776
+    },
+    "n_events": 785,
+    "sample_ok": true
+   }
+  },
+  "问询函": {
+   "n": 575,
+   "event_fut20_pct": -0.75,
+   "net_effect_20d_pct": -0.49,
+   "control_fut20_pct": -0.26,
+   "direction_prior": -1,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.135,
+     "k5": -0.034,
+     "k20": 0.125
+    },
+    "n_valid": {
+     "k1": 850,
+     "k5": 850,
+     "k20": 800
+    },
+    "n_events": 850,
+    "sample_ok": true
+   }
+  },
+  "异动": {
+   "n": 3415,
+   "event_fut20_pct": -2.07,
+   "net_effect_20d_pct": -0.93,
+   "control_fut20_pct": -1.14,
+   "direction_prior": 0,
+   "note": "朴素 −3.18% 大半是均值回归（pre10 已涨 +15.86%）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.233,
+     "k5": -1.411,
+     "k20": -3.026
+    },
+    "n_valid": {
+     "k1": 4327,
+     "k5": 4325,
+     "k20": 4011
+    },
+    "n_events": 4327,
+    "sample_ok": true
+   }
+  },
+  "诉讼": {
+   "n": 1186,
+   "event_fut20_pct": -0.99,
+   "net_effect_20d_pct": -0.93,
+   "control_fut20_pct": -0.06,
+   "direction_prior": -1,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.504,
+     "k5": -1.145,
+     "k20": -1.091
+    },
+    "n_valid": {
+     "k1": 1666,
+     "k5": 1665,
+     "k20": 1518
+    },
+    "n_events": 1666,
+    "sample_ok": true
+   }
+  },
+  "资质认证": {
+   "n": 477,
+   "event_fut20_pct": -1.19,
+   "net_effect_20d_pct": -1.19,
+   "control_fut20_pct": -0.0,
+   "direction_prior": 1,
+   "note": "先验利好被实测推翻",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": 0.078,
+     "k5": -0.41,
+     "k20": -1.18
+    },
+    "n_valid": {
+     "k1": 621,
+     "k5": 621,
+     "k20": 583
+    },
+    "n_events": 621,
+    "sample_ok": true
+   }
+  },
+  "持股变动": {
+   "n": 293,
+   "event_fut20_pct": -1.46,
+   "net_effect_20d_pct": -1.3,
+   "control_fut20_pct": -0.17,
+   "direction_prior": 0,
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.013,
+     "k5": 0.504,
+     "k20": -1.09
+    },
+    "n_valid": {
+     "k1": 385,
+     "k5": 385,
+     "k20": 367
+    },
+    "n_events": 385,
+    "sample_ok": true
+   }
+  },
+  "经营数据": {
+   "n": 880,
+   "event_fut20_pct": -1.58,
+   "net_effect_20d_pct": -1.58,
+   "control_fut20_pct": 0.0,
+   "direction_prior": 1,
+   "note": "先验利好被实测推翻；去月均值后同号月 6/8（−0.77%）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.308,
+     "k5": -0.959,
+     "k20": -1.359
+    },
+    "n_valid": {
+     "k1": 1278,
+     "k5": 1278,
+     "k20": 1166
+    },
+    "n_events": 1278,
+    "sample_ok": true
+   }
+  },
+  "补贴": {
+   "n": 278,
+   "event_fut20_pct": -2.5,
+   "net_effect_20d_pct": -2.39,
+   "control_fut20_pct": -0.11,
+   "direction_prior": 1,
+   "note": "反直觉但稳定：补贴是利空；去月均值后同号月 6/8（−0.67%）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.238,
+     "k5": -0.507,
+     "k20": -1.272
+    },
+    "n_valid": {
+     "k1": 398,
+     "k5": 398,
+     "k20": 376
+    },
+    "n_events": 398,
+    "sample_ok": true
+   }
+  },
+  "风险提示": {
+   "n": 968,
+   "event_fut20_pct": -3.52,
+   "net_effect_20d_pct": -2.83,
+   "control_fut20_pct": -0.69,
+   "direction_prior": -1,
+   "note": "去月均值后同号月 6/8（−0.66%）；pos60<0.2 时 T+20 −10.73%（最毒组合）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -0.996,
+     "k5": -3.276,
+     "k20": -4.719
+    },
+    "n_valid": {
+     "k1": 1405,
+     "k5": 1402,
+     "k20": 1310
+    },
+    "n_events": 1405,
+    "sample_ok": true
+   }
+  },
+  "再融资终止": {
+   "n": 74,
+   "event_fut20_pct": -3.99,
+   "net_effect_20d_pct": -3.87,
+   "control_fut20_pct": -0.12,
+   "direction_prior": 0,
+   "note": "去月均值后同号月 3/4（−1.09%）",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -1.065,
+     "k5": -1.172,
+     "k20": -2.098
+    },
+    "n_valid": {
+     "k1": 115,
+     "k5": 115,
+     "k20": 99
+    },
+    "n_events": 115,
+    "sample_ok": true
+   }
+  },
+  "退市风险": {
+   "n": 50,
+   "event_fut20_pct": -4.72,
+   "net_effect_20d_pct": -4.67,
+   "control_fut20_pct": -0.05,
+   "direction_prior": -1,
+   "note": "n=50 薄；pre20 已跌 −48.9% → 利空提前反应完",
+   "backfill": {
+    "car_mean_pct": {
+     "k1": -2.558,
+     "k5": -6.064,
+     "k20": -2.015
+    },
+    "n_valid": {
+     "k1": 198,
+     "k5": 148,
+     "k20": 110
+    },
+    "n_events": 198,
+    "sample_ok": true
+   }
+  }
+ },
+ "regime": {
+  "定义": "市场状态按公告日前 20 日市场涨幅分档",
+  "偏弱市_-8%~-2%": "事件最有效：利好 T+20 +1.51%*、利空 −1.44%*",
+  "强势市_>8%": "事件全部归零（禁在强势市引用本表净效应）",
+  "去月均值存活的类": [
+   "员工持股",
+   "业绩预告",
+   "质押冻结",
+   "对外投资",
+   "股权激励",
+   "风险提示",
+   "经营数据",
+   "补贴",
+   "再融资终止"
+  ],
+  "月度翻转警告": "原始 CAR 月度几乎全体翻转（31 类中 29 类）→ 翻转主要是市场状态，不是事件失效"
+ },
+ "position_modifier": {
+  "定义": "前期位置（pre10 涨幅 / pos60 分位）对事件净效应的机械修正 · 分层变量全部取 D 日及之前（无前视）",
+  "利空_前10日深跌<-20%": "净效应 −6.77%（最毒，n=359）",
+  "利空_前10日温和区-3%~18%": "净效应 +0.6~+1.1%（买点区）",
+  "利空_前10日暴涨>18%": "转负（>25% 档 −2.07%）",
+  "利好_随前期涨幅单调走强": "12~18% 档 +2.96%；>35% 档 +4.08%（n=188 禁单独下注）",
+  "pos60_两头正中间负": "pos60>0.8 → +2.16%* | <0.2 → +0.88%* | 0.2~0.6 → −0.7~−1.0%（事件最无效区）",
+  "情绪票修正": "近 5 日涨停过的票遇利空 T+20 −1.97%*；冷票 −0.00%（差 2pp，两侧显著；扩样后唯一没变的结论之一）",
+  "利空出尽条件": "『利空出尽』仅在前 20 日已涨（消息出在涨势中）时成立"
+ },
+ "pitfalls": [
+  "基准禁用中位数（右偏造假超额 +0.302%/日）",
+  "基准 universe 必须与采样 universe 一致",
+  "CAR 只在窗口完整时计入",
+  "净效应必须相对事件类基准率 +0.36% 算，不能相对 0"
+ ],
+ "known_gaps": [
+  "公告披露时间（盘前/盘后）未区分，统一按 D+1",
+  "市值因子未纳入（用成交额代理）",
+  "提前反应度（pre20）未进打分公式",
+  "真催化剂历史通道仍缺（业绩预告/中标/重组只有当前快照）→ 事件驱动独立上秤受限",
+  "样本期 2026-01~08 单一年份，未跨牛熊周期验证"
+ ],
+ "backfill": {
+  "method": "CAR(k)=Σ(个股change_pct−bench) over [T0,T0+k)，残窗不入库；bench=全市场等权均值（universe L≥45 且 i∈[20,L−20)）——逐字复刻旧研究 evt_study.car_of 口径",
+  "source": "事件清单=旧包 evt_detail.csv（61,980 事件包，只读转录）；行情=旧包 data/raw/bus/klines.csv（与旧研究同文件）",
+  "data_range": "公告日 D ∈ 2026-01-01..2026-08-20（T0 ≤ 2026-08-21）",
+  "data_end": "2026-09-30",
+  "validate_gate": {
+   "n_compared": 179206,
+   "n_match": 179206,
+   "match_rate": 1.0,
+   "max_abs_diff": 0.012
+  },
+  "reading_rule": "本链 = 全事件市场调整 CAR（事件侧）；旧表 event_fut20/net_effect = 匹配对照组净效应（n 为匹配子集）。两者口径不同禁混读：净效应读旧字段，本项目自有实证读 backfill 子对象；as_of < data_end 时禁读本块（LOOKAHEAD_GUARD，见 read_backfill）",
+  "insufficient_rule": "n_valid(k) < n_min_trust(30) → sample_ok=False，消费方按 INSUFFICIENT_SAMPLES 处理（evidence_grade_rule D 档）"
+ }
+}

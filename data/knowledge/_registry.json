@@ -1,0 +1,46 @@
+{
+  "registry_version": "1.0.0",
+  "note": "S 知识库统一注册表（施工方案 2.10）· load_knowledge(s_id, as_of) 经此路由 · 决策运行期 READ ONLY · 维护期由 C6 验证后版本化回填",
+  "s1": {
+    "path": "data/knowledge/s1_event_effects/effect_base.json",
+    "version": "1.1.0",
+    "s_name": "事件催化评估",
+    "kind": "原地升级新建结构化产物",
+    "origin_note": "F7 事件效应库磁盘实底在旧包（memory/research/F_事件预期差/F7_企业事件效应.md + data/generated/event_study/），原地保留未搬运；本条目指向由实测报告逐条转录的结构化效应基准表；v1.1.0（2026-10-10）：+backfill 实证列（本项目自有 T+1/T+5/T+20 市场调整 CAR，校验门 179206/179206 对账通过，data_end=2026-09-30，消费走 s1_backfill.read_backfill 带 LOOKAHEAD_GUARD）",
+    "companion_files": [
+      "data/knowledge/s1_event_effects/taxonomy.json"
+    ]
+  },
+  "s3": {
+    "path": "data/knowledge/s3_emotion_structure/emotion_base.json",
+    "version": "1.0.0",
+    "s_name": "情绪周期判定",
+    "kind": "新建结构化产物",
+    "origin_note": "v1.0.0（2026-10-10）：S3 历史库首批晋升——84 个交易日（2026-06-01..09-30）阶段×温度×T+1/T+3 涨停溢价分组（X1 提案人工核对后落库；阶段判定=证据门转换+状态延续，阈值=params.s3_rules 重锚种子）。全部格子 n<30 sample_ok=False，只作证据行查看；消费走 s3.history_check 复算对账 / loader.load_knowledge(s3, as_of)",
+    "companion_files": []
+  },
+  "s2": {
+    "path": "data/knowledge/s2_theme_lifecycle/theme_base.json",
+    "version": "1.0.0",
+    "s_name": "题材生命周期定位",
+    "kind": "新建结构化产物",
+    "origin_note": "v1.0.0（2026-10-12）：S2 历史库首批晋升——2026-06-01..09-30 共 147 个行情日 × 269 概念题材的阶段×T+1/T+3 题材等权前向涨幅分组（X1 提案人工核对后落库；阶段判定=证据门三栏+状态延续，阈值=params.s2_rules 分布重锚种子；题材行情=成分股等权聚合，成分=静态快照）。存在 n_days<30 的格子 → sample_ok=False，只作证据行查看，禁出统计结论；消费走 s2.history_check 复算对账 / loader.load_knowledge(s2, as_of)",
+    "companion_files": []
+  },
+  "s5": {
+    "path": "data/knowledge/s5_capital_structure/capital_base.json",
+    "version": "1.0.0",
+    "s_name": "资金筹码结构",
+    "kind": "新建结构化产物",
+    "origin_note": "v1.0.0（2026-10-12）：S5 历史库首批晋升——2026-06-01..09-30 共 428,194 行（个股×日）的资金行为模式 × 筹码状态分组 T+1/T+5 个股涨幅累加（含 beta，与 S1 CAR / S3 涨停溢价 / S2 题材等权均不同属，禁混读；残窗剔除）+ 席位风格档案 1,029 席（sample_ok 109，其余如实标样本不足）。行为=证据组合查表（阈值 params.s5_rules 分布重锚种子），fundflow 09-19 起覆盖骤降（coverage_note 见库 universe）；消费走 s5.history_check 复算对账 / loader.load_knowledge(s5, as_of)",
+    "companion_files": []
+  },
+  "s10": {
+    "path": "data/knowledge/s10_auction/auction_base.json",
+    "version": "1.1.0",
+    "s_name": "竞价/一字板结构",
+    "kind": "旧链研究结构化导入（本次新建）",
+    "origin_note": "v1.0.0（2026-10-19）：母题 G「竞价/日内」研究结构化导入——红线段 G-RL-1/2/3（26 万样本反模式：竞价单测次日溢价≈硬币翻转；竞价=放大器非独立预测源；消息三档口径）+ 实测 G-M-1（恒强：跳空高走×排除高位×量比<2 → 中位+2.7%）+ 假设 G-H-1/G-H-2（n=1/未测，禁当结论）+ 消息三档 S/W/N 口径 + 数据通道真相（westock pre_quote_* 可用、逐笔撮合=伪缺口）。v1.1.0（2026-10-20）：+SYS-GAP-ATTR 跳空归因层——红线 G-RL-4（异动 3.0x/风险提示 1.8x=反向因果陷阱『果非因』，禁用作高开理由）+ 实测 G-M-2（公告提升度：业绩预告/订单 1.5x 可接力、回购/分红/质押/减持 0.6~0.7x 无信号）+ G-M-3（隔夜腿核心=昨缩量封死板→T 日开盘卖 +3.18%/71%，带 caveat 未过闸）+ structure（跳空主因腿外 β18%/共振82%、当日公告仅 12%）+ overnight_leg 腿表 + pending 欠账 6 条。旧包原件见 data/research/imported_20261019/research/G_竞价日内/。消费走 s10.py（降级态亦载红线+归因层）",
+    "companion_files": []
+  }
+}

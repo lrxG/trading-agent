@@ -1,0 +1,51 @@
+{
+  "schema": "e7_research_base",
+  "version": "1.0.0",
+  "as_of": "2026-10-19",
+  "e_id": "e7",
+  "e_name": "个股深度研究",
+  "provenance": {
+    "origin": "旧系统封版技能 skills/stock-research/SKILL.md（单票多维深度体检 · 105 行）",
+    "source_files": ["炒股智能体_旧包_20261008/skills/stock-research/SKILL.md"],
+    "imported_at": "2026-10-19",
+    "import_note": "结构化转录（框架步骤+封闭档位+负面清单）；叙事原件在旧包 skills/stock-research/",
+    "chain": "旧链（旧系统封版方法论）——是研究框架非统计结论；框架内的判据仍须各能力件（S4/S5/S6/S7/S8/E8）供给"
+  },
+  "framework": {
+    "logic_8_steps": ["赛道（空间+格局）", "商业模式", "壁垒/护城河", "成长驱动",
+                      "周期位置（顺周期/逆周期/独立）", "风险", "催化", "估值锚"],
+    "quality_6_dims": ["盈利质量", "负债率", "现金流", "ROE", "分红", "治理"],
+    "overseas_chain": ["海外收入占比", "地缘风险", "关税/制裁暴露"],
+    "valuation_5_steps": ["公司类型", "估值方法", "市场在交易什么",
+                          "估值位置（历史分位/行业对比/业绩匹配）", "重估/杀估值触发"]
+  },
+  "closed_taxonomies": {
+    "reflexivity_bubble_5": ["合理定价", "预期升温", "反身性强化", "泡沫化", "泡沫破裂"],
+    "reflexivity_rule": "泡沫化/破裂阶段 → 风险>机会（识别见顶风险）",
+    "lhb_seat_types": {"机构榜": "中长期信号", "游资榜": "短线情绪", "量化榜": "高频波动"},
+    "crowding_rule": "拥挤度 = 机构持仓历史分位；过高 → 反转风险",
+    "repair_scan_3": {
+      "conditions": ["破净", "扳机事件（重组/改革/困境反转）", "主力净流入"],
+      "rule": "三条件命中 → 提假设 H-xx（UNDER_TEST），禁直接当买入结论"
+    }
+  },
+  "negative_checklists": {
+    "announcement_earnings": ["业绩趋势", "现金流质量", "指引", "分红与融资动机"],
+    "dividend_return": ["分红率", "持续性", "能力", "股东回报政策"],
+    "note": "价值股必查分红四项；公告财报深度走 E7 本技能，不归 event-analysis"
+  },
+  "section_source_map": {
+    "logic_8_steps": "E7 主框架（本件产出）",
+    "quality_6_dims": "E8 公司质地（当前 UNAVAILABLE——无财务/治理源）",
+    "valuation_5_steps": "S6 估值定价（当前 UNAVAILABLE——缺估值序列源）",
+    "crowding": "S4 泡沫/拥挤度（当前 UNAVAILABLE）+ S5 资金筹码（部分就绪）",
+    "catalyst": "S1 事件催化（就绪）+ news_search 库内检索（就绪）",
+    "risk": "C5 position_gate（就绪，硬闸）"
+  },
+  "boundary": "E7 = 单票多维体检框架装配：本件不新造判据，把 S/E/C 各能力件产出按 8 步框架装配成一份可读研究；缺件段如实 UNAVAILABLE + 列解锁条件，禁以框架填空缺",
+  "known_gaps": [
+    "质地 6 维无财务源（E8 UNAVAILABLE）",
+    "估值 5 步无估值序列源（S6 UNAVAILABLE）",
+    "机构持仓历史分位无源（拥挤度量化缺数据）"
+  ]
+}

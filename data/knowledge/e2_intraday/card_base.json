@@ -1,0 +1,73 @@
+{
+  "schema": "e2_intraday_card_base",
+  "version": "1.0.0",
+  "as_of": "2026-10-19",
+  "e_id": "e2",
+  "e_name": "盘中扫描",
+  "provenance": {
+    "origin": "旧系统封版技能 skills/intraday/盘感卡.md（八层一盘感卡 · 封版 V1.0）",
+    "source_files": [
+      "炒股智能体_旧包_20261008/skills/intraday/盘感卡.md",
+      "炒股智能体_旧包_20261008/skills/intraday/methodology.md",
+      "炒股智能体_旧包_20261008/skills/intraday/stock-pool.md"
+    ],
+    "imported_at": "2026-10-19",
+    "import_note": "结构化转录（框架+封闭态值域+硬规则），方法论叙事原件见 data/research/imported_20261019/（旧技能整目录在旧包 skills/intraday/，11 件）",
+    "chain": "旧链（旧系统封版方法论）——是识别框架非统计结论；状态判定证据须量化",
+    "seal_note": "旧件封版承诺：落地+首批反事实测试完成前不增加模块/指标/评分器——导入件继承该承诺"
+  },
+  "hard_rules": [
+    {
+      "id": "E2-HR-1",
+      "rule": "没有盘感卡，禁止输出减仓/止损建议（填卡完成才允许给操作结论）",
+      "enforcement": "E2 的 buy_wait_no/操作类输出前必须先产出八层卡结构；卡不齐 ⇒ 只报异动事实，不出操作建议"
+    },
+    {
+      "id": "E2-HR-2",
+      "rule": "状态判定证据必须量化（量比/换手/均线价位/回封用时/板块涨跌幅），禁纯形容词",
+      "enforcement": "卡的每一层状态必须带量化证据字段；缺证据的状态 = UNKNOWN，禁拍脑袋填"
+    },
+    {
+      "id": "E2-HR-3",
+      "rule": "每张卡⑧层必须带注码；未标等级 = 按 D 处理（不下注），禁止倒推成默认满仓",
+      "evidence": "旧实测教训：9 次满仓单票、第 9 次落熔断区；账户亏损主要来自没有注码概念（判断不带钱=判断没落地）",
+      "enforcement": "操作层输出必须含注码等级（A/B/C/D）；缺省=D"
+    },
+    {
+      "id": "E2-HR-4",
+      "rule": "扫描范围 = 持仓票 + 候选票（点名票/异动票），每轮强制填卡",
+      "enforcement": "E2 evaluate 的扫描对象闭集 = 在仓 + 候选池活跃；不扫无关票"
+    }
+  ],
+  "card_layers": [
+    {"layer": 1, "name": "市场环境", "fields": ["情绪周期", "风险"]},
+    {"layer": 2, "name": "板块环境", "fields": ["主线分级", "板块状态"]},
+    {"layer": 3, "name": "票型", "fields": ["票型"]},
+    {"layer": 4, "name": "走势状态", "fields": ["走势状态"]},
+    {"layer": 5, "name": "盘中行为", "fields": ["价格", "量能", "分时承接", "涨停链", "关键时间点"]},
+    {"layer": 6, "name": "相对强弱", "fields": ["vs板块", "vs同梯队", "vs市场"]},
+    {"layer": 7, "name": "状态变化", "fields": ["变化方向"]},
+    {"layer": 8, "name": "操作", "fields": ["操作", "注码", "T+1执行空间"]}
+  ],
+  "closed_taxonomies": {
+    "emotion_cycle": ["冰点", "修复", "回暖", "高潮", "分歧", "退潮"],
+    "risk_level": ["低", "中", "高"],
+    "mainline_grade": ["主线", "次主线", "弱势"],
+    "sector_state": ["强化", "维持", "分歧", "退潮"],
+    "stock_type": ["主升浪", "趋势", "事件", "情绪龙头", "周期反弹"],
+    "trend_state_10": ["启动", "主升", "分歧", "加速", "加速末端", "健康回调",
+                       "反包二波", "趋势破坏", "退潮", "弱反弹"],
+    "limitup_chain": ["未触板", "触板", "炸板", "换手", "回封", "封稳"],
+    "state_change": ["↑强化", "→维持", "↓弱化", "↕反转"],
+    "action": ["持有", "观察", "减仓候选", "止损候选"],
+    "stake_grade": ["A", "B", "C", "D"]
+  },
+  "stock_type_note": "票型为动态重判（非永久标签）——每轮盘中扫描重判，禁把历史标签当既定事实",
+  "state_change_note": "⑦层昨日→今日必答（禁跳过）；锁仓票的减仓建议自动转次日预案（T+1 执行空间）",
+  "boundary": "盘感卡 = 识别层（一个判断层，不是新系统）：0 新台账/0 新数据库/0 新验证器；卡的输出经 E2 报告呈现，操作建议仍须走 C4 三问（E2 不直接出买卖结论）",
+  "known_gaps": [
+    "旧技能整目录（11 件：OUTPUT-TEMPLATE/buy-sell-signals/position-adjustment/board-comparison/main-trend/market-structure/market-environment 等）未结构化——本次只导八层卡骨架+封闭态+硬规则",
+    "盘中实时腿缺源（availability 未变）：分钟回放腿 westock minute 可用但连接器当前 unavailable（2026-10-19 查）",
+    "注码标定表（⑧-1 判断→钱的金额/占权益%口径）未结构化——金额口径归 C5 position_gate/params，不在此件"
+  ]
+}

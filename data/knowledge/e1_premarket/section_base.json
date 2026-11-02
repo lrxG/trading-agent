@@ -1,0 +1,157 @@
+{
+  "schema": "e1_premarket_section_base",
+  "version": "1.0.0",
+  "as_of": "2026-10-26",
+  "e_id": "E1",
+  "e_name": "盘前预案",
+  "provenance": {
+    "origin": "旧系统 data/generated/reports_archive/盘前预案/（26 篇盘前预案 2026-08-25~09-30 + 8 篇画线草案 2026-09-17~09-30）",
+    "imported_at": "2026-10-26",
+    "imported_by": "用户令「旧系统的盘前预案也算数据也要拿过来」",
+    "original_path": "~/炒股智能体_旧包_20261008/data/generated/reports_archive/盘前预案/",
+    "working_copy": "data/research/imported_20261026_premarket/",
+    "note": "本件 = 从 26 篇实例**机械统计**出的段落骨架（标题编号归一化后计数），不是主观设计。统计口径：提取 ##/### 标题，按 ①-⑫ 编号归并；L0 作战卡按表格首列归并。",
+    "consistency_evidence": {
+      "total_instances": 26,
+      "full_12_section_instances": "2026-09-18 ~ 09-23 四篇为 ①②③④⑤⑥⑦⑧⑨⑩⑪⑫ 完整无缺",
+      "section_hit_rate": {
+        "①": "26/26", "②": "25/26", "③": "26/26", "④": "26/26",
+        "⑤": "25/26", "⑥": "25/26", "⑦": "25/26", "⑧": "25/26",
+        "⑨": "24/26", "⑩": "22/26", "⑪": "22/26", "⑫": "22/26"
+      }
+    }
+  },
+
+  "output_discipline": {
+    "one_line_conclusion": "标题下必须有「一句话结论」（15/26 篇有，后期强制）",
+    "per_row_rule": "每一行 = 数据 + 含义 + 动作（缺一即该行不合格）",
+    "ban": "禁方法论堆砌、禁补丁堆、禁以「某票不错/某链有逻辑」结尾（=未转化）",
+    "boundary": "本件是**格式与证据要求**基线，不含任何交易结论；结论归 C4 三问 + C5 定价",
+    "numbered_sections_fixed": true,
+    "note": "编号唯一（①~⑫，不许自创编号）；盘中扫描卡沿用同号体系（盘中=盘前卡的实时续写）"
+  },
+
+  "l0_card": {
+    "role": "一屏总纲，先看这六行再展开 12 段",
+    "rows": [
+      {"key": "定调", "hint": "环境档 × 今日性质（例：修复日确认 × 节前最后日）", "evidence": "必须含环境档 + 一个当日特殊性质", "hit": "13/26"},
+      {"key": "持仓", "hint": "票/股数/成本/浮亏 → 今日动作（精确股数）", "evidence": "带成本与浮亏绝对值；动作给股数不给形容词", "hit": "12/26"},
+      {"key": "不做", "hint": "明确列出今天不做什么（3 条以内）", "evidence": "每条是**可核对的禁令**，不是态度", "hit": "13/26"},
+      {"key": "候选", "hint": "候选池或明写「无」", "evidence": "写「无」合法且必须说明原因（如「节前最后日零开仓纪律」）", "hit": "12/26"},
+      {"key": "只买一只", "hint": "今天若只买一只买谁；没有就写无 + 原因", "evidence": "旧版高频用法：「无。缺的是环境」——把「没有机会」也当结论写出来", "hit": "6/26"},
+      {"key": "今日H", "hint": "今日新立假设编号 + 必裁假设编号", "evidence": "H-<MMDD><字母> 编号制，与 ⑪ 段一一对应", "hit": "13/26"}
+    ]
+  },
+
+  "sections": [
+    {
+      "no": "①", "name": "隔夜外围",
+      "required": "美股三大 / 美债 / 美联储或政策 / 费半 / 光通信或AI产业 / 中概 / 日韩，逐项给读数 + 对A股传导出口",
+      "evidence_rule": "每项必须落到「看哪只票/看什么/证伪线/动作」；只写读数不写出口 = 不合格",
+      "new_system_source": "westock quote fuCN,fuNQ,fuES（A50期货/纳指100/标普500，2026-10-26 实测可用，实时）",
+      "feasibility": "PARTIAL",
+      "gap": "美债收益率 / 费半指数 / 中概金龙——quote 无对应合约；需 WebSearch 或新增源。A50/纳指/标普已可机械采"
+    },
+    {
+      "no": "②", "name": "大宗商品",
+      "required": "WTI原油 / 黄金 / 白银 / 铜（波动明显品种），给读数 + 板块映射",
+      "evidence_rule": "映射必须是可核对的板块（原油→石化/油服，金→贵金属），并给证伪",
+      "new_system_source": "westock quote fuCL,fuGC,fuSI,fuHG（2026-10-26 实测：WTI -2.09% / 金 +0.09% / 银 +0.09%，实时）",
+      "feasibility": "READY",
+      "gap": "铜 fuHG 待逐一确认代码；其余已可采"
+    },
+    {
+      "no": "③", "name": "企业事件",
+      "required": "近 3 自然日（重点昨日收盘后→今日开盘前）公告/事件，逐条给出口",
+      "evidence_rule": "区分「已定价」与「未定价」；盘后发布 = 今日才是首个定价日（2026-10-23 歌尔实例）",
+      "new_system_source": "tools/e2e/fetch_news.py --notice-pool（自动从涨停池+龙虎榜+候选池取票；2026-10-23 实测 228 只采回 127 条公告）",
+      "feasibility": "READY",
+      "gap": ""
+    },
+    {
+      "no": "④", "name": "昨日盘面回顾",
+      "required": "上证/深成/创业板 读数 / 成交额及环比 / 涨停:跌停 / 涨占比 / 环境判定 / 相关题材梯队表现",
+      "evidence_rule": "环境判定必须给证据链（涨占比→修复/退潮），不平铺指标",
+      "new_system_source": "data/raw/<prev>/env_metrics.json（limit_up_count/max_board/turnover/up_down_ratio/fail_rate/index_ma20）+ daily_quote.csv + limit_up.csv",
+      "feasibility": "READY",
+      "gap": ""
+    },
+    {
+      "no": "⑤", "name": "今日关注板块分级",
+      "required": "级别（⭐观察/参与/回避）× 板块 × 逻辑超额 × 龙头 × 参与条件 × 证伪条件",
+      "evidence_rule": "每级必须给「今日看什么=一数」与证伪线；禁把所有上涨板块都说成机会",
+      "new_system_source": "westock sector ranking（124 行业，含 changePct / mainNetInflow 1D·5D·20D / upCount / leader，2026-10-26 实测）+ S2 题材生命周期",
+      "feasibility": "PARTIAL",
+      "gap": "板块→个股成员映射需 S2 成分股表；分级本身已可机械出"
+    },
+    {
+      "no": "⑥", "name": "持仓处理",
+      "required": "每票：股数@成本 / 现价 / 浮盈亏 / 今日轨迹 / 资金盘口证据 / 今日动作（精确股数）",
+      "evidence_rule": "赋值依据必须是逻辑失效位或结构位（给不出就给逻辑失效条件，不给死数字）；T+1 先查可用股数",
+      "new_system_source": "memory/state/positions.md + tools/risk/exit_gate.py（C5 退出闸）+ intraday_scan.py 实时价",
+      "feasibility": "GAP",
+      "gap": "**阻塞**：pnl 账本 capital=0（初始资金未给）⇒ drawdown_of() 返 None ⇒ 熔断闸 CIRCUIT_UNAVAILABLE_FAILSAFE 归零 ⇒ 无持仓可处理"
+    },
+    {
+      "no": "⑦", "name": "仓位与情景预案",
+      "required": "环境档 → 仓位上限；涨/平/跌三情景各给动作；最大可接受亏损上限",
+      "evidence_rule": "仓位数值唯一权威 = params.json 仓位矩阵，禁临场发挥",
+      "new_system_source": "data/params.json（仓位矩阵 + 单票顶 + 熔断阀）+ tools/risk/position_gate.py",
+      "feasibility": "PARTIAL",
+      "gap": "矩阵在，但熔断阀输入依赖 ⑥ 的净值账本（同阻塞）"
+    },
+    {
+      "no": "⑧", "name": "风险提示",
+      "required": "🔴/🟡/🟢 分级 × 风险点（带数值）× 动作；🔴 只用于强制出逃",
+      "evidence_rule": "🔴 必须点名到票或板块，禁泛泛「注意风险」",
+      "new_system_source": "C5 position_gate + C1 环境档 + intraday_scan 的炸板率/追封比",
+      "feasibility": "READY",
+      "gap": ""
+    },
+    {
+      "no": "⑨", "name": "机会分析",
+      "required": "机会 × 逻辑（预期差）× 触发/参与 × 证伪",
+      "evidence_rule": "可写「无」——候选池空是环境的结果不是失职，但必须说明原因",
+      "new_system_source": "data/state/candidates.json（OPEN 三态）+ C3 驱动（driver/next_trigger）+ C2 五路扫描",
+      "feasibility": "READY",
+      "gap": ""
+    },
+    {
+      "no": "⑩", "name": "综上所述",
+      "required": "5 句以内收口：今天做什么 / 不做什么 / 只买什么 / 最大风险 / 一句话",
+      "evidence_rule": "不得引入 ①-⑨ 之外的新信息（纯收口段）",
+      "new_system_source": "装配层（读 ①-⑨ 已生成内容，零新源）",
+      "feasibility": "READY",
+      "gap": ""
+    },
+    {
+      "no": "⑪", "name": "假设写入",
+      "required": "新立假设（编号 + 条件 + 目标 + 证伪）/ 待裁假设更新",
+      "evidence_rule": "H-<MMDD><字母> 编号制；与 L0 的「今日H」行一一对应；盘前立账、盘后统一结算",
+      "new_system_source": "memory/state/thesis.md + tools/learning/hypothesize.py（obs→假设→verify）",
+      "feasibility": "PARTIAL",
+      "gap": "工具在（hypothesize 自检 12/12），但历史 obs 样本不足 ⇒ SUPPORT=0 ⇒ 假设账本仍空"
+    },
+    {
+      "no": "⑫", "name": "经验参考",
+      "required": "本次判断引用了哪条历史结论/教训（带样本量标注）",
+      "evidence_rule": "旧链结论须标 [旧链] + 样本量；与新链冲突以新链复测为准",
+      "new_system_source": "data/research/answers_imported/ANSWERS_20260921.md（1332 行旧链结论→动作层）+ data/generated/cases.jsonl（新链 Case 池）+ docs/方法论总索引-M1到M23.md（M1~M30 判据）",
+      "feasibility": "READY",
+      "gap": ""
+    }
+  ],
+
+  "vs_new_system_e1": {
+    "current_e1_output_sections": ["环境档（← C1）", "候选池（← C2）", "风险约束（← C5+params）", "声明缺口与数据状态", "结论"],
+    "verdict": "现 E1 产出的是**能力产物装配件**（5 段技术结构），不是**作战卡**（L0+12 段）。两者不是同一层：装配件给机器读，作战卡给人做决定用。",
+    "recommendation": "保留现 5 段作为 E1 的机器可读层（下游 c5/e9 消费），在其后追加 L0+12 段人读层；禁把两者混成一段——混了就是第二次「盘前预案写成技术报告」。"
+  },
+
+  "known_gaps": [
+    "① 段美债收益率 / 费半 / 中概金龙无 quote 合约，需 WebSearch 或新增源",
+    "⑥⑦ 段被 pnl 账本 capital=0 阻塞（初始资金未给）——这是全链最硬的一处断点",
+    "⑤ 段板块→个股映射需 S2 成分股表（s_s2 快照有，但按日，需取最近一份）",
+    "⑪ 段假设账本因 obs 样本 <15 无法 SUPPORT，只能写「待验」"
+  ]
+}

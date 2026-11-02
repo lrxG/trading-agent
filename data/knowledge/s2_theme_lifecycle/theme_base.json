@@ -1,0 +1,402 @@
+{
+ "schema": 1,
+ "s_id": "s2",
+ "cap": "S2",
+ "as_of": "2026-09-30",
+ "data_end": "2026-09-30",
+ "n_rows_total": 23134,
+ "n_unresolved": 869,
+ "n_min_trust": 30,
+ "method": {
+  "theme_series": "成分股等权聚合（等权涨幅/宽度/涨停数/连板高度/成交额）；成分=静态快照（v1 局限）",
+  "forward": "题材等权涨幅 T+1/T+3 累加（含市场 beta；与 S1 市场调整 CAR、S3 涨停溢价口径均不同属，禁混读）",
+  "residual": "窗口任一日缺行情该题材剔除该窗（残窗不入库）",
+  "stage_gate": "证据门三栏（必要/辅助/反向），阈值 = params.s2_rules；周期语义=阶段是状态、门是转换：转换门未命中且前值有阶段 → 状态延续（断链即 UNRESOLVED，不跨缺口外推）",
+  "grouping": "v1 = 阶段 与 族×阶段 两视图；行级明细保留全字段可再分组"
+ },
+ "universe": {
+  "n_concept_sectors": 269,
+  "n_members": 46832,
+  "n_members_with_klines": 5116,
+  "n_code_bad": 0
+ },
+ "groups": {
+  "UNRESOLVED": {
+   "n_days": 869,
+   "fwd_t1_mean_pct": -0.286,
+   "fwd_t3_mean_pct": -0.855,
+   "sample_ok": true
+  },
+  "分歧": {
+   "n_days": 2283,
+   "fwd_t1_mean_pct": -0.098,
+   "fwd_t3_mean_pct": -0.264,
+   "sample_ok": true
+  },
+  "加速": {
+   "n_days": 96,
+   "fwd_t1_mean_pct": 0.051,
+   "fwd_t3_mean_pct": -0.103,
+   "sample_ok": true
+  },
+  "发现": {
+   "n_days": 2863,
+   "fwd_t1_mean_pct": 0.031,
+   "fwd_t3_mean_pct": 0.19,
+   "sample_ok": true
+  },
+  "发酵": {
+   "n_days": 2419,
+   "fwd_t1_mean_pct": -0.186,
+   "fwd_t3_mean_pct": -0.479,
+   "sample_ok": true
+  },
+  "尾声": {
+   "n_days": 12619,
+   "fwd_t1_mean_pct": -0.039,
+   "fwd_t3_mean_pct": -0.15,
+   "sample_ok": true
+  },
+  "扩散": {
+   "n_days": 1716,
+   "fwd_t1_mean_pct": -0.126,
+   "fwd_t3_mean_pct": -0.267,
+   "sample_ok": true
+  }
+ },
+ "family_groups": {
+  "A": {
+   "n_days": 13090,
+   "fwd_t1_mean_pct": -0.08,
+   "fwd_t3_mean_pct": null,
+   "sample_ok": true,
+   "by_stage": {
+    "UNRESOLVED": {
+     "n_days": 505,
+     "fwd_t1_mean_pct": -0.155,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "分歧": {
+     "n_days": 1392,
+     "fwd_t1_mean_pct": -0.055,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "加速": {
+     "n_days": 69,
+     "fwd_t1_mean_pct": 0.487,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发现": {
+     "n_days": 1754,
+     "fwd_t1_mean_pct": 0.038,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发酵": {
+     "n_days": 1566,
+     "fwd_t1_mean_pct": -0.175,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "尾声": {
+     "n_days": 6747,
+     "fwd_t1_mean_pct": -0.077,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "扩散": {
+     "n_days": 1057,
+     "fwd_t1_mean_pct": -0.184,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    }
+   }
+  },
+  "B": {
+   "n_days": 2465,
+   "fwd_t1_mean_pct": -0.034,
+   "fwd_t3_mean_pct": null,
+   "sample_ok": true,
+   "by_stage": {
+    "UNRESOLVED": {
+     "n_days": 149,
+     "fwd_t1_mean_pct": -0.362,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "分歧": {
+     "n_days": 141,
+     "fwd_t1_mean_pct": 0.043,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "加速": {
+     "n_days": 8,
+     "fwd_t1_mean_pct": -2.155,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "发现": {
+     "n_days": 357,
+     "fwd_t1_mean_pct": -0.067,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发酵": {
+     "n_days": 87,
+     "fwd_t1_mean_pct": -0.161,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "尾声": {
+     "n_days": 1680,
+     "fwd_t1_mean_pct": 0.019,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "扩散": {
+     "n_days": 43,
+     "fwd_t1_mean_pct": -0.321,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    }
+   }
+  },
+  "C": {
+   "n_days": 4930,
+   "fwd_t1_mean_pct": -0.06,
+   "fwd_t3_mean_pct": null,
+   "sample_ok": true,
+   "by_stage": {
+    "UNRESOLVED": {
+     "n_days": 128,
+     "fwd_t1_mean_pct": -0.744,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "分歧": {
+     "n_days": 560,
+     "fwd_t1_mean_pct": -0.172,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "加速": {
+     "n_days": 14,
+     "fwd_t1_mean_pct": -0.668,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "发现": {
+     "n_days": 555,
+     "fwd_t1_mean_pct": 0.06,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发酵": {
+     "n_days": 556,
+     "fwd_t1_mean_pct": -0.127,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "尾声": {
+     "n_days": 2778,
+     "fwd_t1_mean_pct": -0.021,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "扩散": {
+     "n_days": 339,
+     "fwd_t1_mean_pct": 0.001,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    }
+   }
+  },
+  "D": {
+   "n_days": 765,
+   "fwd_t1_mean_pct": -0.093,
+   "fwd_t3_mean_pct": null,
+   "sample_ok": true,
+   "by_stage": {
+    "UNRESOLVED": {
+     "n_days": 13,
+     "fwd_t1_mean_pct": 0.277,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "分歧": {
+     "n_days": 84,
+     "fwd_t1_mean_pct": -0.245,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "加速": {
+     "n_days": 3,
+     "fwd_t1_mean_pct": -0.562,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "发现": {
+     "n_days": 73,
+     "fwd_t1_mean_pct": -0.316,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发酵": {
+     "n_days": 79,
+     "fwd_t1_mean_pct": -0.288,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "尾声": {
+     "n_days": 408,
+     "fwd_t1_mean_pct": 0.084,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "扩散": {
+     "n_days": 105,
+     "fwd_t1_mean_pct": -0.392,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    }
+   }
+  },
+  "E": {
+   "n_days": 85,
+   "fwd_t1_mean_pct": -0.135,
+   "fwd_t3_mean_pct": null,
+   "sample_ok": true,
+   "by_stage": {
+    "分歧": {
+     "n_days": 10,
+     "fwd_t1_mean_pct": -1.073,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "发酵": {
+     "n_days": 6,
+     "fwd_t1_mean_pct": -0.396,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "尾声": {
+     "n_days": 43,
+     "fwd_t1_mean_pct": -0.093,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "扩散": {
+     "n_days": 26,
+     "fwd_t1_mean_pct": 0.218,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    }
+   }
+  },
+  "F": {
+   "n_days": 595,
+   "fwd_t1_mean_pct": 0.115,
+   "fwd_t3_mean_pct": null,
+   "sample_ok": true,
+   "by_stage": {
+    "UNRESOLVED": {
+     "n_days": 33,
+     "fwd_t1_mean_pct": -0.271,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "分歧": {
+     "n_days": 28,
+     "fwd_t1_mean_pct": -0.037,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "加速": {
+     "n_days": 2,
+     "fwd_t1_mean_pct": -0.222,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": false
+    },
+    "发现": {
+     "n_days": 40,
+     "fwd_t1_mean_pct": 0.956,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发酵": {
+     "n_days": 33,
+     "fwd_t1_mean_pct": -0.288,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "尾声": {
+     "n_days": 396,
+     "fwd_t1_mean_pct": 0.072,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "扩散": {
+     "n_days": 63,
+     "fwd_t1_mean_pct": 0.344,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    }
+   }
+  },
+  "H": {
+   "n_days": 935,
+   "fwd_t1_mean_pct": -0.115,
+   "fwd_t3_mean_pct": null,
+   "sample_ok": true,
+   "by_stage": {
+    "UNRESOLVED": {
+     "n_days": 41,
+     "fwd_t1_mean_pct": -0.386,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "分歧": {
+     "n_days": 68,
+     "fwd_t1_mean_pct": -0.345,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发现": {
+     "n_days": 84,
+     "fwd_t1_mean_pct": -0.034,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "发酵": {
+     "n_days": 92,
+     "fwd_t1_mean_pct": -0.629,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "尾声": {
+     "n_days": 567,
+     "fwd_t1_mean_pct": -0.022,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    },
+    "扩散": {
+     "n_days": 83,
+     "fwd_t1_mean_pct": 0.058,
+     "fwd_t3_mean_pct": null,
+     "sample_ok": true
+    }
+   }
+  }
+ },
+ "provenance": {
+  "built_at": "2026-10-12",
+  "source": "旧包 data/raw/bus/klines.csv + data/raw/meta/tdx_sector_constituent.csv + data/raw/meta/concept_radar_<date>.csv（只读外部输入）",
+  "gate": "X1 提案 data/generated/reports/s2_backfill/summary.json 人工核对后晋升",
+  "check": "tools/analysis/s2.py --history-check 复算对账（reproduced 判据）",
+  "warning": "存在 n_days<30 的格子 → sample_ok=False，只作证据行查看，禁出统计结论"
+ }
+}

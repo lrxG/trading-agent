@@ -1,0 +1,956 @@
+{
+ "version": "1.0.8",
+ "updated_at": "2026-10-12",
+ "params": {
+  "single_stock_cap_of_position": {
+   "value": 60,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "single_stock_cap_of_equity": {
+   "value": 39,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "max_holding_count": {
+   "value": 3,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "circuit_breaker_drawdown_l1": {
+   "value": 15,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "circuit_breaker_cap_l1": {
+   "value": 5,
+   "unit": "steps",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "circuit_breaker_drawdown_l2": {
+   "value": 25,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "circuit_breaker_flat_days": {
+   "value": 3,
+   "unit": "days",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "circuit_breaker_daily_drawdown": {
+   "value": 8,
+   "unit": "pct_per_day",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "trial_position": {
+   "value": 10,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "min_hold_days": {
+   "value": 3,
+   "unit": "days",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "counter_trend_env_drop": {
+   "value": 1,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "counter_trend_resist": {
+   "value": 0.5,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "counter_trend_red_minutes": {
+   "value": 30,
+   "unit": "minutes",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "counter_trend_volume_ratio": {
+   "value": 1.5,
+   "unit": "times",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "counter_trend_bid_ratio": {
+   "value": 4,
+   "unit": "times",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "counter_trend_position_drop": {
+   "value": 1,
+   "unit": "steps",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "correction_price_up": {
+   "value": 5,
+   "unit": "pct",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "correction_observe_days": {
+   "value": 3,
+   "unit": "days",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "correction_cooldown_days": {
+   "value": 3,
+   "unit": "days",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "correction_position_half": {
+   "value": 0.5,
+   "unit": "ratio",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "candidate_watch_window_days": {
+   "value": 5,
+   "unit": "days",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "sector_scan_top_n": {
+   "value": 5,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "mainline_token_min_len": {
+   "value": 2,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "mainline_dormant_after_miss": {
+   "value": 2,
+   "unit": "days",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "mainline_float_mv_gate": {
+   "value": 200,
+   "unit": "config",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "cascade_significance": {
+   "value": 0.03,
+   "unit": "ratio",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "cascade_max_hops": {
+   "value": 4,
+   "unit": "steps",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "stall_empty_threshold": {
+   "value": 3,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "regime_ladder": {
+   "value": {
+    "主升": {
+     "limit_up_min": 60,
+     "board_height_min": 5,
+     "break_rate_max": 0.2,
+     "position_cap": 7
+    },
+    "强势": {
+     "limit_up_min": 40,
+     "board_height_min": 4,
+     "break_rate_max": 0.3,
+     "position_cap": 5
+    },
+    "震荡": {
+     "limit_up_min": 25,
+     "board_height_min": 0,
+     "break_rate_max": 0.4,
+     "position_cap": 3
+    },
+    "退潮": {
+     "fallback": true,
+     "condition": "涨停<25 或 炸板率>=40%",
+     "position_cap": 1
+    }
+   },
+   "unit": "ratio_map",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "REGIME_SEED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "driver_dict": {
+   "value": {
+    "A": {
+     "name": "产业催化",
+     "verify": [
+      "政策/订单落地可查证",
+      "传导链可追溯到受益标的",
+      "兑现路径与时间窗口明确"
+     ]
+    },
+    "B": {
+     "name": "资金抢占",
+     "verify": [
+      "席位/资金流向可查",
+      "筹码集中度上升",
+      "非对倒放量"
+     ]
+    },
+    "C": {
+     "name": "情绪扩散",
+     "verify": [
+      "题材发酵阶段可定",
+      "龙头/中军/补涨梯队完整",
+      "炸板率未失控"
+     ]
+    }
+   },
+   "unit": "config",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "route_config": {
+   "value": {
+    "I1": {
+     "name": "消息",
+     "entry": "用户给消息 / 新闻",
+     "note": "具体能力由 capability_registry.trigger 派生，本处不写能力名"
+    },
+    "I2": {
+     "name": "资金",
+     "entry": "问资金 / 席位 / 流向",
+     "note": "同上"
+    },
+    "I3": {
+     "name": "技术",
+     "entry": "问形态 / 位置 / 量价",
+     "note": "同上"
+    },
+    "I4": {
+     "name": "个股·自选",
+     "entry": "点名个股 / 自选异动",
+     "note": "同上"
+    },
+    "I5": {
+     "name": "板块·主线",
+     "entry": "问板块 / 主线 / 题材",
+     "note": "同上"
+    },
+    "I6": {
+     "name": "持仓异动",
+     "entry": "持仓异动 / 问持仓怎么办",
+     "note": "同上"
+    },
+    "I7": {
+     "name": "盘面现象",
+     "entry": "观察到盘面现象（涨停潮 / 炸板潮等）",
+     "note": "同上"
+    }
+   },
+   "unit": "config",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-08",
+   "tightening_direction": "FREE"
+  },
+  "obs_min_repeat": {
+   "value": 3,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "verify_intervals": {
+   "value": 2,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "FREE"
+  },
+  "verify_min_samples": {
+   "value": 5,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "verify_min_edge": {
+   "value": 0.1,
+   "unit": "ratio",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "verify_cost_model": {
+   "value": "PARAM_RATES:cost_buy_rate+cost_sell_rate",
+   "unit": "enum",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-10",
+   "tightening_direction": "FREE"
+  },
+  "cost_buy_rate": {
+   "value": 0.00125,
+   "unit": "ratio",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-10",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "cost_sell_rate": {
+   "value": 0.00175,
+   "unit": "ratio",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-10",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "rule_decay_refute_streak": {
+   "value": 2,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "demand_repeat_wrong_min": {
+   "value": 2,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "demand_min_settled": {
+   "value": 3,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "demand_support_floor": {
+   "value": 0.34,
+   "unit": "ratio",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "HIGHER_IS_TIGHTER"
+  },
+  "weekly_underperform_weeks": {
+   "value": 2,
+   "unit": "count",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "USER_DEFINED",
+   "last_review": "2026-10-09",
+   "tightening_direction": "LOWER_IS_TIGHTER"
+  },
+  "s3_rules": {
+   "value": {
+    "temp": {
+     "zt_warm": 40,
+     "zt_hot": 70,
+     "zt_over": 120,
+     "promote_hot": 0.22,
+     "promote_over": 0.3,
+     "mb_over": 6
+    },
+    "stage": {
+     "advance_zt_days": 2,
+     "ignite_mb_max": 4,
+     "ignite_promote_min": 0.2,
+     "ignite_first_share_min": 0.6,
+     "ferment_promote_min": 0.26,
+     "ferment_mb_min": 3,
+     "ferment_fail_max": 0.45,
+     "ferment_premium_aux": 2.0,
+     "climax_promote_min": 0.3,
+     "climax_premium_aux": 3.0,
+     "climax_fail_max": 0.5,
+     "diverge_fail_min": 0.35,
+     "diverge_mb_min": 3,
+     "diverge_premium_aux": 2.0,
+     "ebb_highfeed_max": 0.0,
+     "ebb_promote_aux": 0.2,
+     "freeze_zt_max": 30,
+     "freeze_mb_max": 3,
+     "freeze_promote_max": 0.12
+    },
+    "structure": {
+     "mid_min_boards": 2,
+     "mid_min_amount": 500000000.0,
+     "catchup_n_min": 8,
+     "catchup_pos_max": 0.35
+    }
+   },
+   "unit": "ratio_map",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "EXPERIENCE",
+   "last_review": "2026-10-10",
+   "tightening_direction": "FREE"
+  },
+  "s2_rules": {
+   "value": {
+    "stage": {
+     "discover_zt_min": 2,
+     "discover_pct_min": 1.5,
+     "discover_first_aux": 0.6,
+     "ferment_zt_min": 4,
+     "ferment_mb_min": 2,
+     "ferment_breadth_aux": 0.5,
+     "diffuse_zt_min": 5,
+     "diffuse_expand_days": 2,
+     "diffuse_first_min": 0.6,
+     "diffuse_breadth_aux": 0.6,
+     "accel_pct_min": 3.0,
+     "accel_mb_min": 3,
+     "accel_zt_min": 5,
+     "accel_amount_ratio_min": 1.1,
+     "accel_narrow_max": 0.35,
+     "diverge_mb_min": 3,
+     "diverge_breadth_aux": 0.5,
+     "ending_zt_max": 3,
+     "ending_breadth_max": 0.35
+    },
+    "theme": {
+     "active_zt_min": 5,
+     "max_board_window": 20,
+     "amount_ma_window": 5
+    }
+   },
+   "unit": "ratio_map",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "EXPERIENCE",
+   "last_review": "2026-10-12",
+   "tightening_direction": "FREE"
+  },
+  "b7_families": {
+   "value": {
+    "keywords": {
+     "A": [
+      "半导体",
+      "芯片",
+      "存储",
+      "光刻",
+      "封装",
+      "PCB",
+      "CPO",
+      "光通信",
+      "铜缆",
+      "液冷",
+      "算力",
+      "数据中心",
+      "东数西算",
+      "云",
+      "大数据",
+      "人工智能",
+      "AI",
+      "大模型",
+      "机器人",
+      "减速器",
+      "消费电子",
+      "电子纸",
+      "折叠屏",
+      "OLED",
+      "MiniLED",
+      "MLCC",
+      "MCU",
+      "EDA",
+      "工业软件",
+      "工业互联",
+      "工业母机",
+      "工业气体",
+      "工业大麻",
+      "国产软件",
+      "信创",
+      "操作系统",
+      "数字孪生",
+      "机器视觉",
+      "边缘计算",
+      "物联网",
+      "5G",
+      "6G",
+      "星闪",
+      "量子",
+      "电池",
+      "BIPV",
+      "光伏",
+      "风电",
+      "储能",
+      "氢能源",
+      "燃料电池",
+      "充电桩",
+      "换电",
+      "特高压",
+      "智能电网",
+      "核电",
+      "核能",
+      "可控核聚变",
+      "3D打印",
+      "新材料",
+      "PEEK",
+      "POE",
+      "PVDF",
+      "碳纤维",
+      "石墨烯",
+      "先进封装",
+      "玻璃基板",
+      "复合铜箔",
+      "一体压铸",
+      "汽车",
+      "新能源车",
+      "外骨骼",
+      "人脑工程",
+      "智能",
+      "无线耳机",
+      "虚拟现实",
+      "虚拟电厂",
+      "混合现实",
+      "超清视频",
+      "元宇宙",
+      "毫米波雷达",
+      "胎压",
+      "车联网",
+      "快充",
+      "飞行汽车",
+      "华为",
+      "小米",
+      "高端装备",
+      "光电",
+      "超导",
+      "超级电容",
+      "动力电池回收",
+      "医疗",
+      "药",
+      "疫苗",
+      "基因",
+      "免疫治疗",
+      "CXO",
+      "辅助生殖",
+      "血氧仪",
+      "NMN",
+      "合成生物",
+      "肝炎",
+      "幽门螺杆菌",
+      "降解塑料",
+      "培育钻石",
+      "IP经济",
+      "区块链",
+      "数字货币",
+      "Web3",
+      "NFT",
+      "数字水印",
+      "电子身份证",
+      "数据要素",
+      "数据确权",
+      "时空大数据",
+      "信息安全",
+      "游戏",
+      "热泵",
+      "超临界发电",
+      "生物质能",
+      "地热能",
+      "光热发电",
+      "低空经济",
+      "无人机",
+      "无人驾驶",
+      "远程办公",
+      "ChatGPT",
+      "DeepSeek"
+     ],
+     "B": [
+      "贵金属",
+      "黄金",
+      "稀土",
+      "小金属",
+      "金属",
+      "稀缺资源",
+      "锂",
+      "盐湖提锂",
+      "煤炭",
+      "天然气",
+      "页岩气",
+      "可燃冰",
+      "化肥",
+      "磷",
+      "氟",
+      "有机硅",
+      "聚氨酯",
+      "维生素",
+      "草甘膦",
+      "分散染料",
+      "猪肉",
+      "鸡肉",
+      "水产品",
+      "种业",
+      "粮食",
+      "人造肉",
+      "代糖",
+      "虫害",
+      "航运",
+      "电力"
+     ],
+     "C": [
+      "地产",
+      "建筑",
+      "基建",
+      "城镇",
+      "雄安",
+      "一带一路",
+      "乡村",
+      "土地",
+      "供销社",
+      "自贸",
+      "物业",
+      "租购",
+      "管网",
+      "水利",
+      "环保",
+      "污染",
+      "养老",
+      "婴童",
+      "职业",
+      "免税",
+      "旅游",
+      "零售",
+      "白酒",
+      "预制菜",
+      "物流",
+      "政务",
+      "智慧",
+      "金融",
+      "支付",
+      "跨境",
+      "烟草",
+      "PPP",
+      "C2M",
+      "ETC",
+      "DRG",
+      "高铁",
+      "水电",
+      "医美",
+      "医废",
+      "垃圾分类",
+      "安防",
+      "宠物",
+      "家庭医生",
+      "海洋",
+      "海峡",
+      "粤港澳",
+      "海南",
+      "上海",
+      "中俄",
+      "创投",
+      "新型工业化",
+      "碳中和",
+      "风沙",
+      "知识产权",
+      "知识付费",
+      "网红",
+      "医院",
+      "财税",
+      "食品安全"
+     ],
+     "D": [
+      "MicroLED",
+      "特斯拉",
+      "苹果",
+      "英伟达",
+      "阿里",
+      "腾讯",
+      "百度",
+      "抖音",
+      "小红书"
+     ],
+     "E": [
+      "ST板块",
+      "重组",
+      "借壳",
+      "壳资源",
+      "并购",
+      "控制权"
+     ],
+     "F": [
+      "中特估",
+      "次新股",
+      "含B股",
+      "含H股",
+      "含GDR",
+      "含可转债",
+      "通达信"
+     ],
+     "G": [],
+     "H": [
+      "军工",
+      "军贸",
+      "军民融合",
+      "卫星",
+      "航天",
+      "大飞机",
+      "博彩",
+      "赛马",
+      "体育",
+      "口罩"
+     ]
+    },
+    "families": {
+     "A": {
+      "name": "产业0→1"
+     },
+     "B": {
+      "name": "涨价供需"
+     },
+     "C": {
+      "name": "政策救助"
+     },
+     "D": {
+      "name": "海外映射"
+     },
+     "E": {
+      "name": "重组壳"
+     },
+     "F": {
+      "name": "流动性重估"
+     },
+     "G": {
+      "name": "情绪代号图腾"
+     },
+     "H": {
+      "name": "事件单日"
+     }
+    },
+    "note_scope": "B7 v2 引擎八族（旧包 memory/research/B_主线生命周期/B7_*）；keyword = 概念板块名子串，按族码字典序首个命中；无命中 = UNKNOWN 不硬归"
+   },
+   "unit": "config",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "EXPERIENCE",
+   "last_review": "2026-10-12",
+   "tightening_direction": "FREE"
+  },
+  "s5_rules": {
+   "value": {
+    "flow": {
+     "window": 5,
+     "min_days": 3
+    },
+    "behavior": {
+     "priority": [
+      "suspected_round_trip",
+      "relay",
+      "accumulation",
+      "distribution"
+     ],
+     "rt_dual_min": 0.9,
+     "rt_net_abs_max": 0.02,
+     "rt_turnover_min": 1.5,
+     "relay_zt_min": 1,
+     "relay_net_min": 0.0,
+     "relay_turnover_min": 1.0,
+     "acc_cum_min": 0.03,
+     "acc_streak_min": 2,
+     "acc_gain_max": 0.1,
+     "dist_cum_max": -0.05,
+     "dist_pos_min": 0.7,
+     "dist_streak_min": 2
+    },
+    "chip": {
+     "priority": [
+      "集中",
+      "分散",
+      "换手充分"
+     ],
+     "conc_concentrated_max": 10.0,
+     "conc_dispersed_min": 20.0,
+     "turnover_sufficient_min": 1.5,
+     "profit_high_min": 90.0
+    },
+    "seat": {
+     "min_days": 3,
+     "min_codes": 2,
+     "zt_share_min": 0.3,
+     "t1_med_min": 0.5
+    },
+    "note_scope": "分布对齐非结果验证（2026-06-30 全市场 5183 票 + 09-29 实测分位）；BASELINE/UNCALIBRATED，待 C6 验证链校准"
+   },
+   "unit": "ratio_map",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "EXPERIENCE",
+   "last_review": "2026-10-12",
+   "tightening_direction": "FREE"
+  },
+  "s5_seats": {
+   "value": {
+    "priority": [
+     "机构",
+     "北向",
+     "拉萨系",
+     "游资"
+    ],
+    "types": {
+     "机构": [
+      "机构专用",
+      "证券总部",
+      "摩根",
+      "高盛",
+      "瑞银",
+      "巴克莱",
+      "花旗",
+      "汇丰",
+      "野村",
+      "中金"
+     ],
+     "北向": [
+      "股通"
+     ],
+     "拉萨系": [
+      "拉萨"
+     ],
+     "游资": [
+      "分公司",
+      "证券"
+     ]
+    },
+    "note": "席位类型 = 名称/ID 关键词机械分类，**非真实资金主体认定**（设计 2.5 锁死 3：席位类型 ≠ 最终资金主体）"
+   },
+   "unit": "config",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "EXPERIENCE",
+   "last_review": "2026-10-12",
+   "tightening_direction": "FREE"
+  }
+ }
+}

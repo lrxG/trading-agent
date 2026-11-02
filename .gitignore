@@ -1,0 +1,104 @@
+# 依赖与产物
+__pycache__/
+*.pyc
+/tmp/
+/archive/
+data/backtest_history/
+
+# WorkBuddy 运行时产物（自动化执行记录/内部状态·不进版本库）
+# 例外：.workbuddy/skills/ = S/E 插件的平台落点（项目级技能），属本项目源码、必须进版本库随双机同步
+.workbuddy/*
+!.workbuddy/skills/
+!.workbuddy/skills/**
+
+# 可再生大件（须可重建才忽略——阶段C逐项定论，暂全部保留由 git 管理）
+# 等工具迁移完成后，若 klines 总线可由 settle 一键重建，再在此加入
+# data/raw/bus/klines.csv
+
+# 本地环境
+*.log
+.DS_Store
+*.tmp
+*_fail.txt
+# 可再生大件（westock 可重采，不入库）
+data/raw/bus/klines.csv
+data/raw/bus/mktcap.csv
+data/raw/bus/finance.csv
+
+# 采集区死数据（日链/回填工具自拉，本地保留不入库——用户令 2026-10-27）
+data/raw/
+data/state/reseeds/
+
+# 产物类（可再生成/一次性文档，不入库——用户令 2026-10-27：推送=代码+方法论+需反哺的知识）
+data/generated/
+data/research/audit/
+data/research/event_study/
+data/research/replay/BT-*/
+data/research/replay/matrix_regime.json
+data/research/env_recalc/*.csv
+data/research/env_gate_audit/daily_audit.csv
+data/research/obs/*.out.txt
+data/research/obs/*.csv
+# ── 个人记忆与本地状态（绝不进版本库：换机器须重新积累）──────────────────
+memory/
+data/state/account.json
+data/state/paper_portfolio.json
+data/state/cursor.json
+data/state/run_log.jsonl
+data/state/candidates.json
+data/state/mainline.json
+data/state/h_ledger.jsonl
+data/state/timing_log.jsonl
+data/state/timing_state.json
+data/state/learn_weekly_state.json
+data/state/_fetch_micro_progress.json
+
+# ── 本地缓存与可重采数据 ─────────────────────────────────────────────
+data/snapshot/
+data/input/
+data/learning/
+data/generated/
+
+# ── 研究档案（成果与积累，非系统本体，整目录不入库）────────────────────
+# 2026-11-02 用户令：连 obs/*.py 这类模型研究脚本也是产物，一并出列
+data/research/**
+
+# 个人数据备份残件
+*.bak
+*.bak_*
+.bak_*/
+
+# ── 统一推送纪律（2026-11-02 用户令，gitee/github/发版一致）────────────────
+# 只推送干净系统本体：测试数据、用户数据、本地缓存、敏感信息一概不入库
+*.bundle
+*.pat
+secrets/
+.secrets/
+*_token*
+*_secret*
+data/test/
+data/tmp/
+tmp/
+tests/fixtures/real/
+data/state/channel_mcp_ok.json
+
+# 一次性补丁脚本与提交信息草稿（禁止入库）
+_*.py
+_*.txt
+.gitmsg.txt
+
+# ── docs 只留工程契约与配置（2026-11-02 用户令）─────────────────────────
+# 设计方案 / 施工方案 / 自查报告 / 研究实证 / 重构记录 / 能力台账 md
+# 都属「证明我做完了什么」的产物，不是系统本体 ⇒ 一律不入库
+docs/**
+!docs/PAPER-EXEC-CONTRACT.md
+!docs/RAW-INGEST-CONTRACT.md
+!docs/数据源.md
+
+# 根目录下划线开头的备忘与派生视图（params_changelog 的人读视图等）
+/_*.md
+
+# 运行态产物（2026-11-02）
+data/decision_card.md
+data/calibration_queue.jsonl
+data/state/*.lock

@@ -1,0 +1,180 @@
+{
+  "skeleton_version": "1.5.16",
+  "updated_at": "2026-11-02",
+  "files": [
+    {
+      "id": "paths.py",
+      "target": "file:tools/fs/paths.py",
+      "sha256": "sha256:d49ee680f5fc1b137811bfa7c88eda22208f1f8fe52552b1d54df822127b5a91",
+      "contract": "项目根定位（唯一权威）"
+    },
+    {
+      "id": "C0.cursor",
+      "target": "file:tools/fs/cursor.py",
+      "sha256": "sha256:e2f9d400c6f577df60fc9c8c39f24700b24b058b2edccbd13c3a57c8f73ed80f",
+      "contract": "0.1 游标（date 推进唯一执行器，settle.py 是写者）"
+    },
+    {
+      "id": "C0.snapshot",
+      "target": "file:tools/fs/snapshot.py",
+      "sha256": "sha256:3b16d2a6a6e334619140f0d028beb438f613e3b1b5fa6f8607b3a13ca703f390",
+      "contract": "0.2 信息截断（load_asof ≤ D 物理隔离未来）"
+    },
+    {
+      "id": "C0.loader",
+      "target": "file:tools/fs/loader.py",
+      "sha256": "sha256:2369385c0d2514c1e19f506f82d63cf949f7ac084b6c57ae851d2143d9266eb8",
+      "contract": "0.10 数据统一入口（取数唯一门）"
+    },
+    {
+      "id": "C0.candidates",
+      "target": "file:tools/fs/candidates.py",
+      "sha256": "sha256:65a43354d3b09fa90e868866103ea1f3e55a97b342966818497f72830f4271a3",
+      "contract": "0.5 候选池状态机（迁移唯一执行器）"
+    },
+    {
+      "id": "C0.thesis",
+      "target": "file:tools/fs/thesis.py",
+      "sha256": "sha256:1a113ecb5769b463cfdcefea9ddbb5e54748c7b355ea6e82a492fb0d9fe5e5fa",
+      "contract": "4.2 Thesis 认知对象 + 级联门控"
+    },
+    {
+      "id": "C0.decision",
+      "target": "file:tools/fs/decision.py",
+      "sha256": "sha256:5aeb4b93fa6fcfd0123976c5863f1ed570c30bd59a572ae0e07771661d29cab9",
+      "contract": "0.3 决策快照（不可变 + SIM/LIVE 双轴）"
+    },
+    {
+      "id": "C0.pnl",
+      "target": "file:tools/fs/pnl.py",
+      "sha256": "sha256:b59eff36462a92c94419568bfd0ac65f18a9c54756e3e9e3bf355a1232a8f147",
+      "contract": "0.4 净值账本（结算层，append-only）"
+    },
+    {
+      "id": "C0.params",
+      "target": "file:tools/fs/params.py",
+      "sha256": "sha256:61785e1a9eb390c01cbcaadee162d089dc600732f898118b71e421039634d783",
+      "contract": "0.8/0.9 参数总账（正式值唯一写入口 = promote）"
+    },
+    {
+      "id": "C0.registry",
+      "target": "file:tools/fs/registry.py",
+      "sha256": "sha256:a2834a009e3d0821f303af5aad024ae448c843a9df895d1fb10b7c4bf6d8c305",
+      "contract": "0.18 能力注册表 + 骨架冻结校验"
+    },
+    {
+      "id": "C0.landing",
+      "target": "file:tools/fs/landing.py",
+      "sha256": "sha256:0e67b7cf76d8ec2c2f9fd2cf141f23c6a0614b6ab098952d88343266f6476aac",
+      "contract": "0.7 落点封闭（5 落点 + 5 豁免 · 可反查登记表）"
+    },
+    {
+      "id": "C0.three_q",
+      "target": "file:tools/fs/three_q.py",
+      "sha256": "sha256:43d0585600a112e782cfee021046f5da01223b826647ed7839c54dc3e7fee9b4",
+      "contract": "1.4 三问（文件体；API 另由 const:api.three_questions 锁）"
+    },
+    {
+      "id": "C0.astwin",
+      "target": "file:tools/fs/astwin.py",
+      "sha256": "sha256:a67333af49b4068e26fed5048061bb201c56c928ce5ed22ed1f771ecaccc453a",
+      "contract": "P1 AST 窗口（尾界）唯一实现 —— 审计地基，禁任何模块再自写副本"
+    },
+    {
+      "id": "params.schema",
+      "target": "const:tools/fs/params.py:PARAM_FIELDS",
+      "sha256": "sha256:ce63c4313720fa61bfa8ce6d12ad8456ef046897bf9d38e5f619020a92d3e0d2",
+      "contract": "0.8 params 七列 meta schema"
+    },
+    {
+      "id": "params.queue_schema",
+      "target": "const:tools/fs/params.py:QUEUE_FIELDS",
+      "sha256": "sha256:5eec4b38bba9f53753d528c9db76f43c57a9b329c23a5ae1551804ddcd23bf1f",
+      "contract": "0.9 候选队列六列 schema"
+    },
+    {
+      "id": "params.changelog_schema",
+      "target": "const:tools/fs/params.py:CHANGELOG_FIELDS",
+      "sha256": "sha256:f06d024894dcb445aa2618f624f107619283bdee87a002b7be9eff553515e099",
+      "contract": "0.9 变更史七列 schema"
+    },
+    {
+      "id": "registry.schema",
+      "target": "const:tools/fs/registry.py:CAP_FIELDS",
+      "sha256": "sha256:12dea3e70e9be94dc74bcb7e26e00702a848e9b3294c62833a9bc855241802f3",
+      "contract": "0.18 能力行 12 列 schema"
+    },
+    {
+      "id": "decision.ledger_schema",
+      "target": "const:tools/fs/decision.py:DECISION_FIELDS",
+      "sha256": "sha256:bcce79cb346033c13baedc6b478f9f5c838b076019e24bef9491a2e0732b3645",
+      "contract": "0.3 decision_ledger 事件 schema"
+    },
+    {
+      "id": "candidates.state_schema",
+      "target": "const:tools/fs/candidates.py:FIELDS",
+      "sha256": "sha256:1fe33246fd42386e890f8962370017c15190a637407582b8fc37f1b4f5578148",
+      "contract": "0.5 候选池字段 schema"
+    },
+    {
+      "id": "C0.premarket",
+      "target": "file:tools/decision/premarket.py",
+      "sha256": "sha256:881f834ac3ccb288213b83c31ba16dd5f07ad28b1bc9df7c6953402e734b872c",
+      "contract": "E1 盘前预案（只读装配层 · 唯一写点 data/generated/reports/e1_<as_of>.md · 落点 X1） —— 2026-10-13 重签批准入册（#159 授权新建）"
+    },
+    {
+      "id": "C0.learn_pipeline",
+      "target": "file:tools/learning/learn_pipeline.py",
+      "sha256": "sha256:a54a542500c46eb9c4837b6443bb33501ceaf17d5b6429c92685765b3791212e",
+      "contract": "C6 回测学习闭环唯一入口（batch_replay 历史回放 → cases 池 → obs → demand → 每周5指标报告）—— 2026-10-23 v1.5.0 批准入册（A 方案）。边界：不产 Rule（须 verify + 用户批准）、不改生存参数、回放沙盒落系统临时域不碰生产"
+    },
+    {
+      "id": "C0.hypothesize",
+      "target": "file:tools/learning/hypothesize.py",
+      "sha256": "sha256:ccda4c67dae36508f043965b349fb4187b99b0b98f736b64bd5284fb86c769bb",
+      "contract": "C6 观察→假设自动桥（obs 重复结构 → 可验证假设 → verify 分段 → 仅 SUPPORT 经 calibrate.propose_param 交候选）—— 2026-10-23 v1.5.1 入册。边界：不产 Rule、不改参数、不批准；判据复用 verify_min_samples/min_edge"
+    },
+    {
+      "id": "C0.strategy_matrix",
+      "target": "file:tools/learning/strategy_matrix.py",
+      "sha256": "sha256:285ce4c83b82bb191cb0ca1f12aefeb99a84ca31d94ad18d8f6e02701e137eab",
+      "contract": "C6 策略×环境矩阵（Regime × Catalyst 交叉切格出 n/胜率/偏离/覆盖缺口，零推荐只出事实）—— 2026-10-23 v1.5.2 入册。对应设计 §2 病根 4「相关会过期」：单策略胜率随环境漂移，但「环境→策略」对应关系稳定得多"
+    },
+    {
+      "id": "C0.settle",
+      "target": "file:tools/risk/settle.py",
+      "sha256": "sha256:87887453f7d42f4c8be0988484a018a17ea032e2186177a8e65d2c423e35adf4",
+      "contract": "0.6 五步结算 checklist 唯一执行器",
+      "promoted_from_pending": true
+    },
+    {
+      "id": "C0.wakeup",
+      "target": "file:tools/fs/wakeup.py",
+      "sha256": "sha256:6581857409851f99ab633422cededbdc99e4c570fc523d3f119b1dd791933d41",
+      "contract": "0.14 运行入口（唤醒即追平）",
+      "promoted_from_pending": true
+    },
+    {
+      "id": "C0.observe",
+      "target": "file:tools/fs/observe.py",
+      "sha256": "sha256:0110cfd667901dd9c263f1c3d8938601533e28c20a1010aff0233cef6215a91b",
+      "contract": "0.17 运转可观测与自愈（run_observed）",
+      "promoted_from_pending": true
+    },
+    {
+      "id": "C0.hboard",
+      "target": "file:tools/fs/hboard.py",
+      "sha256": "sha256:9b864c90f0f6b62fba969d3eeacc36d267f80ef3491e7bc103ca1eb2d9113328",
+      "contract": "0.12 跨日看板（装配层聚合视图，h_board.md 唯一写入方）",
+      "promoted_from_pending": true
+    },
+    {
+      "id": "api.three_questions",
+      "target": "const:tools/fs/three_q.py:THREE_Q_API",
+      "sha256": "sha256:4a1379381dd7101585977c9298a0d431dd95de995b87abe39b9cf1ab9d4c0103",
+      "contract": "1.4 三问 API 签名",
+      "promoted_from_pending": true
+    }
+  ],
+  "pending": []
+}

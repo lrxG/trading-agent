@@ -1,0 +1,40 @@
+# 统一行尾：仓库内一律 LF，任何机器 clone 都不做 CRLF 转换。
+#
+# 为什么必须有这个文件（2026-11-02 事故）：
+#   Git for Windows 的系统级 gitconfig 默认 core.autocrlf=true，clone 时会把文本
+#   文件转成 CRLF；而本系统的骨架冻结台账（data/state/skeleton_manifest.json）是
+#   **逐字节 sha256** 比对 —— 行尾一变，registry.py verify 立刻全线 SKELETON_DRIFT。
+#   本机子目录曾靠 .git/config 里 core.autocrlf=false 侥幸不出问题，换台干净机器
+#   拉下来就是一片红。规则必须写进仓库，不能依赖本地配置。
+#
+# 纪律：本仓库所有文本文件一律 UTF-8 无 BOM + LF。
+
+* text=auto eol=lf
+
+*.py      text eol=lf
+*.md      text eol=lf
+*.json    text eol=lf
+*.jsonl   text eol=lf
+*.csv     text eol=lf
+*.tsv     text eol=lf
+*.txt     text eol=lf
+*.sh      text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.cfg     text eol=lf
+*.ini     text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+
+# 二进制：禁止任何转换
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.gz   binary
+*.zip  binary
+*.pyc  binary
+*.xlsx binary
+*.xls  binary
+*.docx binary
+*.pptx binary
