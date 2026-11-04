@@ -205,6 +205,8 @@ params 三键（`demand_repeat_wrong_min` / `demand_min_settled` / `demand_suppo
 | 说人话 | 文件 |
 | --- | --- |
 | **决策卡** | `data/decision_card.md`（0.15） |
+| **盘前预案** | `data/generated/reports_archive/盘前预案/盘前预案_{日期}.md`——**全量契约**：必须按 `templates/盘前预案模板.md` 九章全写（L0 摘要/隔夜外围/①b 公告原文核过≥5 条/①c 热榜≥8 条+竞价快照/昨日复盘/主线分级/企业事件/情景操作具体化/H 假设）。缺章=未完成，不得交付。事故记录见模板尾部（2026-11-04 缩水至 5132 字节被用户定性"开玩笑"）。
+**推送纪律（2026-11-04 用户令）**：凡修改了系统本体文件（白名单内），**改完即推送**，不攒批；推送仅含干净系统本体，本地缓存/memory/用户信息/敏感信息/持仓信息/运行态账本一律不进。 |
 | **净值账本** | `data/generated/pnl_ledger.jsonl`（0.4）+ `data/generated/decision_ledger.jsonl`（0.3） |
 | **当前状态** | `memory/state/brain_state.md` + `memory/state/positions.md`（0.12） |
 
