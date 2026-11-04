@@ -1,5 +1,5 @@
 {
- "version": "1.0.9",
+ "version": "1.1.0",
  "updated_at": "2026-11-04",
  "params": {
   "single_stock_cap_of_position": {
@@ -961,6 +961,16 @@
    "last_review": "2026-11-04",
    "tightening_direction": "SMALLER_IS_TIGHTER",
    "note": "WIN_BUT_WRONG 缺口滚动窗口；原全历史累计导致历史病例永不消化（2026-11-04 修）"
+  },
+  "a_share_beta_amplifier": {
+   "value": 4.76,
+   "unit": "x",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "OBSERVED_20261104",
+   "last_review": "2026-11-04",
+   "tightening_direction": "SMALLER_IS_TIGHTER",
+   "note": "A股对全球定价锚（美债实际利率/美元）的弹性放大器。2026-11-04 双标的交叉验证：科创50 +10.08%/上证 +2.12% = 4.76x；黄金股ETF +9.98%/COMEX金 +2.00% = 5.00x；黄金股ETF/上海金 +2.75% = 3.63x。区间 3.6~5.0x，取中位 4.76x。来源为市场结构（涨跌停截断+两融杠杆+散户占比+超跌深度），与中国政策无关；双向适用，驱动反转时同样按此倍数反向。用法：目标位 = 锚变化量 × 4.76；单日样本，需多日校准。"
   }
  }
 }
