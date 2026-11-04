@@ -1,6 +1,6 @@
 {
- "version": "1.0.8",
- "updated_at": "2026-10-12",
+ "version": "1.0.9",
+ "updated_at": "2026-11-04",
  "params": {
   "single_stock_cap_of_position": {
    "value": 60,
@@ -951,6 +951,16 @@
    "source": "EXPERIENCE",
    "last_review": "2026-10-12",
    "tightening_direction": "FREE"
+  },
+  "demand_wbw_window_days": {
+   "value": 7,
+   "unit": "day",
+   "status": "BASELINE",
+   "validation": "UNCALIBRATED",
+   "source": "SCAN_FIX",
+   "last_review": "2026-11-04",
+   "tightening_direction": "SMALLER_IS_TIGHTER",
+   "note": "WIN_BUT_WRONG 缺口滚动窗口；原全历史累计导致历史病例永不消化（2026-11-04 修）"
   }
  }
 }

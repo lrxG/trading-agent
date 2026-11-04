@@ -90,6 +90,11 @@ def scan(as_of, *, sim, cases_path=None, params_path=None, demand_path=None):
     rep_min = PARAMS.get_value("demand_repeat_wrong_min", path=params_path)
     n_min = PARAMS.get_value("demand_min_settled", path=params_path)
     floor = PARAMS.get_value("demand_support_floor", path=params_path)
+    wbw_window = PARAMS.get_value("demand_wbw_window_days", default=7,
+                                  path=params_path)
+    import datetime as _dt
+    wbw_cutoff = (_dt.date.fromisoformat(as_of)
+                  - _dt.timedelta(days=int(wbw_window))).isoformat()
     gaps = []
     wrong_l, wrong_3, win_but_wrong = {}, {}, 0
     verd = {"SUPPORT": 0, "MIXED": 0, "REFUTE": 0}
@@ -107,7 +112,11 @@ def scan(as_of, *, sim, cases_path=None, params_path=None, demand_path=None):
         if r.get("outcome") == "WIN" and ms and all(
                 m == "REFUTE" for m in ms if m is not None) \
                 and any(m is not None for m in ms):
-            win_but_wrong += 1
+            # v1.1（2026-11-04）：只统计滚动窗口内结算的案例。
+            #   原实现全历史累计（count>0 即触发），历史病例永不消化，
+            #   缺口 9-30/10-20/11-02 三次重复报同一条——学习需求必须带衰减。
+            if (r.get("settle_date") or "") >= wbw_cutoff:
+                win_but_wrong += 1
     if n:
         for k in sorted(wrong_l):
             if wrong_l[k] >= rep_min:
@@ -119,7 +128,8 @@ def scan(as_of, *, sim, cases_path=None, params_path=None, demand_path=None):
                              "count": wrong_3[k]})
         if win_but_wrong:
             gaps.append({"kind": "WIN_BUT_WRONG", "where": "M1/M2/M3 全 REFUTE",
-                         "count": win_but_wrong})
+                         "count": win_but_wrong,
+                         "window_days": int(wbw_window)})
         tot = sum(verd.values())
         sr = (verd["SUPPORT"] / tot) if tot else None
         if sr is not None and n >= n_min and sr < floor:
@@ -243,6 +253,14 @@ def _selftest():
       any(g["kind"] == "JUDGEMENT_QUALITY_LOW" for g in r["gaps"]))
     T("A4 行带 scanner=DEMAND_SCANNER（与 SETTLE_MINIMAL 同队列可区分）",
       _rows_of(demand)[-1]["scanner"] == "DEMAND_SCANNER")
+    # A5 窗口化（2026-11-04）：窗口外的 WIN_BUT_WRONG 不报缺口
+    cases2 = os.path.join(sb, "cases2.jsonl")
+    demand2 = os.path.join(sb, "learning2", "demand_queue.jsonl")
+    _write(cases2, [_case("w9", "2026-09-01", "WIN", win_but_wrong=True)])
+    r2 = scan("2026-10-09", sim=True, cases_path=cases2, params_path=pp,
+              demand_path=demand2)
+    T("A5 窗口外 WIN_BUT_WRONG 不触发缺口（7 日滚动窗）",
+      not any(g["kind"] == "WIN_BUT_WRONG" for g in r2["gaps"]))
 
     # ── B 组：幂等 / 阈值真源 / 无缺口留痕 ──
     r2 = scan("2026-10-09", sim=True, cases_path=cases, params_path=pp,
