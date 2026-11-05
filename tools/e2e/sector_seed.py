@@ -75,6 +75,43 @@ def _num(v):
         return None
 
 
+def _split_by_width(cells):
+    """以"宽度字段"为锚定位各列。→ dict 或 None
+
+    ★ 2026-11-05 实证的坑：上游 `sector ranking` 的列数会变，但本件原来按固定下标取，
+      于是**静默错位一格且不报错**：
+        自检样例（9 列）: ...,4069027,1.68,78/91,长盈精密(19.99)
+        11-04 真实（9 列）: ...,-4624146.65,26719824.0,4.73,181/183
+      真实数据多了一个资金字段、少了 leader ⇒ 按 c[7] 取 up_count 拿到的是 4.73（换手率），
+      c[8] 拿到 181/183（那才是宽度），leader 恒为 None。
+      ⇒ 后果：任何用"板块宽度"的逻辑（S4 拥挤度、异动归因）都在拿换手率当宽度，且不告警。
+
+    改为锚定形态特征（含 "/" 且两侧为数字），再向前推换手率/成交额、向后取领涨股。
+    新旧两种列数都能正确解析。
+    """
+    k = None
+    for i in range(len(cells) - 1, 1, -1):
+        s = str(cells[i] or "").strip()
+        if "/" not in s:
+            continue
+        a, _, b = s.partition("/")
+        try:
+            if float(a) >= 0 and float(b) > 0:
+                k = i
+                break
+        except ValueError:
+            continue
+    if k is None or k < 5:
+        return None
+    return {
+        "up_count": str(cells[k]).strip(),
+        "turnover_rate": _num(cells[k - 1]),
+        "turnover": _num(cells[k - 2]),
+        "leader": cells[k + 1] if len(cells) > k + 1 else None,
+        "_anchor": k,
+    }
+
+
 def fetch_ranking():
     """当日板块行情榜 → rows（RANK_COLS 形态）。"""
     txt = _run(["sector", "ranking"])
@@ -82,10 +119,14 @@ def fetch_ranking():
     for c in _parse_md(txt):
         if len(c) < 9:
             continue
+        sp = _split_by_width(c)
+        if sp is None:
+            # 定位不到宽度 ⇒ 宁可丢这一行，也不写入错位值
+            continue
         out.append({"code": c[0], "name": c[1], "change_pct": _num(c[2]),
                     "main_net_inflow": _num(c[3]), "main_net_inflow_5d": _num(c[4]),
-                    "turnover": _num(c[5]), "turnover_rate": _num(c[6]),
-                    "up_count": c[7], "leader": c[8] if len(c) > 8 else None})
+                    "turnover": sp["turnover"], "turnover_rate": sp["turnover_rate"],
+                    "up_count": sp["up_count"], "leader": sp["leader"]})
     return out
 
 
@@ -308,6 +349,17 @@ def _selftest():
     T("A3 markdown 表解析（跳过分隔行）", len(rows) == 1 and rows[0][0] == "pt01801085")
     T("A4 _num 空值与逗号", _num("") is None and _num("-") is None
       and _num("1,234.5") == 1234.5)
+    # A5/A6 列错位自愈：11-04 真实行（比自检样例多一个资金字段、少 leader）
+    real = ["pt01801081", "半导体", "11.41", "1939645.76", "-875552.69",
+            "-4624146.65", "26719824.0", "4.73", "181/183"]
+    s = _split_by_width(real)
+    T("A5 错位行：宽度锚定到 181/183", s is not None and s["up_count"] == "181/183",
+      str(s and s.get("up_count")))
+    T("A6 错位行：换手率取 4.73 而非把宽度当换手率",
+      s is not None and s["turnover_rate"] == 4.73 and s["turnover"] == 26719824.0,
+      str(s))
+    T("A7 无宽度字段 → None（宁丢行不写错位值）",
+      _split_by_width(["a", "b", "1", "2", "3", "4", "5", "6"]) is None)
     sb = tempfile.mkdtemp(prefix="sector_seed_")
     try:
         os.makedirs(os.path.join(sb, "data", "raw", "2026-10-19"))

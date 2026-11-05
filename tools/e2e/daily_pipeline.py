@@ -134,6 +134,19 @@ STEPS = [
     (15, "五步结算", "tools/risk/settle.py",
      ["--settle", "{d}", "--calendar", CAL], True, 2,
      "全绿则游标推进到该日；这是唯一推进游标的入口"),
+    (16, "收盘体检+异动归因", "tools/analysis/close_audit.py",
+     ["--date", "{d}"], False, 20,
+     "★★ 2026-11-05 新增（两起实证失效的固定护栏）："
+     "①**板块异动失明**——11-03 美国中期选举日光伏启动（永臻三连板），"
+     "系统到 11-05 用户直接追问才去找原因，晚 2 个交易日。根因不是预测不到"
+     "（选举是日程表上的确定事件），是收盘后没有固定动作去看「今天哪些板块动了」。"
+     "本步输出涨幅榜+涨停密度+**深V反转榜**（谁昨天在跌幅榜尾部、今天进前十），"
+     "每条留『原因=?』空位——填不上就是功课没做完，不许进次日预案。"
+     "②**不复权价污染跌幅**——klines.close 是不复权价而 change_pct 是真涨跌幅，"
+     "实测瑞达期货 60 日 -41.7%(不复权)/-9.9%(复权) 差 31.8 点，"
+     "德明利差 17 点 ⇒ 按跌幅榜选票会把除权票排到前面。"
+     "③MA20 双值并列（11-05 曾把截至昨日值 4136 当当日值报）。"
+     "**只读件**，不写任何生产数据，故 writes=False 不进写步骤统计"),
 ]
 
 S_SUITE = [
@@ -594,6 +607,17 @@ def _selftest():
     T("T27 新闻采集带 --notice-pool（否则公告永不采 ⇒ A路/S1/S8 上游断）",
       any("--notice-pool" in " ".join(st[3]) for st in STEPS
           if "fetch_news.py" in st[2]), "")
+
+    # T28~T30 收盘体检（2026-11-05 加的护栏，防以后被当冗余删掉）
+    _ca = [st for st in STEPS if "close_audit.py" in st[2]]
+    T("T28 收盘体检（close_audit.py）必须在每日链里", len(_ca) == 1, str(len(_ca)))
+    if _ca:
+        # 它读 sector_ranking/limit_up，必须排在板块数据（sector_seed）之后
+        _i_ca, _i_sec = _ca[0][0], next((s[0] for s in STEPS if "sector_seed.py" in s[2]), None)
+        T("T29 收盘体检必须排在板块数据之后", _i_sec is not None and _i_ca > _i_sec,
+          "audit=%s sector=%s" % (_i_ca, _i_sec))
+        # 只读件：写成写步骤会让写作闸去拦一个不写数据的脚本
+        T("T30 收盘体检是只读件（writes=False）", _ca[0][4] is False, str(_ca[0][4]))
 
     print("\n结果：%d 通过 / %d 失败" % (ok, fail))
     return 0 if fail == 0 else 1
