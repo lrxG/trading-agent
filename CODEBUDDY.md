@@ -39,3 +39,4 @@
 | 认知状态（判断类问题先整读） | `memory/state/brain_state.md` · `memory/state/positions.md` |
 | 平台技能（S/E 插件） | `.workbuddy/skills/<id>/SKILL.md` |
 | 项目工作记忆 | `.workbuddy/memory/MEMORY.md` + `.workbuddy/memory/YYYY-MM-DD.md` |
+| **成文报告模板（交付前必读，缺章=未完成）** | `templates/产业趋势研究模板_v2.md`（产业趋势研究·填充骨架 + 11 条自检门）· `templates/盘前预案模板.md`（九章契约）· `templates/盘后复盘模板_v1.md` · `templates/业绩研究模板_v1.md` |
