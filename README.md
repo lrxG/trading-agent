@@ -121,6 +121,7 @@ Audit（逐笔归因 · 闸门反事实 · 环境档分组 CI，n<20 强制 INSU
 AGENT.md CODEBUDDY.md        内核与注入入口（先读）
 tools/
   analysis/                  replay 引擎 / env_recalc / event_study / strategy_matrix
+  dashboard/                 ★ 可视化面板（只读数据服务，见下）
   e2e/                       盘前 / 盘中 / 信息面 / 日链 / 采集件
   fs/                        门禁（landing/registry/writegate/wakeup/candidates）
   learning/                  学习闭环（learn_pipeline/hypothesize/verify）
@@ -131,6 +132,36 @@ data/
 docs/                        工程契约三件（数据口径 · 纸面执行 · 数据源）
 memory/                      认知记忆（**不入库**：本地运行生成）
 ```
+
+## 八b、可视化面板（`tools/dashboard/`）
+
+**为什么有它**：对话式问答不适合盘中决策——一条结论刷屏过去就找不到了，
+读数也不能一直盯着。面板把「每天的判断」钉成一屏，改一次数据源整屏跟着变。
+
+```bash
+python tools/dashboard/server.py --open          # 或双击 tools/dashboard/start.bat
+python tools/dashboard/server.py --port 8771 --warm
+```
+
+打开 `http://127.0.0.1:8770/`。**纯标准库 + 原生 canvas，无 CDN、无外网依赖。**
+
+| 区域 | 内容 | 真源 |
+|---|---|---|
+| 顶栏 | 环境档/仓位上限 · 涨跌比 · 中位/等权 · 封板数 · 首板占比 · 2板+ · 炸板率 · 成交额 | `env_metrics.json` + `daily_quote.csv` + `limit_up.csv` |
+| 左栏 | 用户实盘持仓（成本/浮盈/纪律线距离条）· 自选（可搜索加票）· 封板梯队 | `memory/state/user_positions.md` |
+| 中栏 | K线 + MA5/10/20/60 + 成本线 + 成交额 · 全市场涨跌分布 · 板块资金流 | `klines.csv` · `sector_ranking.csv` |
+| 右栏 | 今日一句话判断 · 连板结构（首板占比 3 日对比）· 族温度计 · 数据缺口 | `brain_state.md` · `zibei_thermo.py` |
+
+**两条硬规矩（写在代码里，别绕过）**：
+
+1. **量能一律用成交额，禁用 `volume`** —— `klines.csv` 的 volume 单位三段跳
+   （2024 比对 0.10 / 2025-09~2026-09-30 是「手」≈100 / 2026-10-08 起是「股」≈1）。
+   跨 2026-10-08 的表观「放量 69 倍」实为「缩量 43%」。详见 `trade-rules` §一d.11 第 4 条。
+2. **面板只读**：不写任何文件、不落缓存、不改参数，因此不影响落点封闭纪律。
+   解析失败一律显式标「解析告警」，不静默补 0。
+
+**盘中模式**：`?mode=int` 或右上「盘中」按钮，切到最近一份 `data/raw/intraday/<date>/scan_*.csv` 截面
+（宽度/封板数/连板梯度）。**没有逐分钟行情，所以不画分时曲线**——raw 里没有，不凭空造。
 
 ## 九、研究纪律（宪法条款）
 
