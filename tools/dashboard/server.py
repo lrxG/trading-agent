@@ -1055,6 +1055,35 @@ def overview_payload(date=None):
 INDEX = os.path.join(_HERE, "index.html")
 
 
+class DashServer(ThreadingHTTPServer):
+    """★ Windows 上必须关掉 allow_reuse_address。
+
+    `socketserver.TCPServer.allow_reuse_address = True` 在 Linux 上等价 SO_REUSEADDR
+    （只允许复用 TIME_WAIT），但 Windows 的 SO_REUSEADDR 语义不同：**它允许两个进程
+    同时绑同一个端口**。实测双击两次 start.bat 后 `netstat` 出现两个 python 都在
+    127.0.0.1:8770 LISTENING，浏览器请求被内核随机分给其中任一个 —— 于是同一次刷新
+    时而拿到新版、时而拿到旧版（旧版字段不同、路径不同），表现就是
+    「一堆 bug、时好时坏」。关掉它，第二次启动才会真的 bind 失败并顺延端口。
+    """
+    allow_reuse_address = os.name != "nt"
+    daemon_threads = True
+
+
+def _find_running(base_port, host="127.0.0.1", span=12):
+    """探测本机是否已有面板实例在跑；有则返回其地址（用于复用而不是再起一个）。"""
+    import urllib.request  # noqa: PLC0415
+    for i in range(span):
+        url = "http://%s:%d/" % (host, base_port + i)
+        try:
+            with urllib.request.urlopen(url + "api/meta", timeout=0.35) as r:
+                j = json.loads(r.read().decode("utf-8"))
+            if isinstance(j, dict) and j.get("ok") and "server_time" in j:
+                return url
+        except Exception:
+            continue
+    return None
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "TradingDash/2.0"
     protocol_version = "HTTP/1.1"
@@ -1126,7 +1155,17 @@ def main(argv=None):
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--open", action="store_true", help="起服务后自动打开浏览器")
     ap.add_argument("--warm", action="store_true", help="启动即预热 K 线缓存")
+    ap.add_argument("--force", action="store_true", help="忽略已有实例，强制另起一个")
     a = ap.parse_args(argv)
+
+    # 已有实例就直接复用它（连点两次 start.bat 不会再多出一个抢端口的进程）
+    if not a.force:
+        run_url = _find_running(a.port, a.host)
+        if run_url:
+            print("已有面板在 %s 运行，直接复用（不再另起进程）" % run_url)
+            if a.open:
+                webbrowser.open(run_url)
+            return 0
 
     print("工作区根：%s" % ROOT)
     print("最新收盘：%s ｜ 今天：%s ｜ 今日收盘已落盘：%s"
@@ -1143,7 +1182,7 @@ def main(argv=None):
     srv, port = None, a.port
     for i in range(12):
         try:
-            srv = ThreadingHTTPServer((a.host, a.port + i), Handler)
+            srv = DashServer((a.host, a.port + i), Handler)
             port = a.port + i
             break
         except OSError:
@@ -1151,7 +1190,6 @@ def main(argv=None):
     if srv is None:
         print("端口 %d~%d 全被占用，请关掉旧面板再试" % (a.port, a.port + 11))
         return 1
-    srv.daemon_threads = True
     url = "http://%s:%d/" % (a.host, port)
     if port != a.port:
         print("端口 %d 被占用，已改用 %d" % (a.port, port))
