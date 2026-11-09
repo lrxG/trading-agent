@@ -101,6 +101,8 @@ main{display:grid;grid-template-columns:262px minmax(0,1fr) 372px;gap:1px;flex:1
 /* ---------- 中栏 ---------- */
 .chartwrap{position:relative}
 canvas{display:block;width:100%}
+/* 十字光标画在独立覆盖层：主画布只在数据变化时重绘 */
+canvas.ovl{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:2}
 .kline-hd{
   display:flex;align-items:center;gap:12px;padding:8px 12px;border-bottom:1px solid var(--line);
   background:var(--panel);flex-wrap:wrap;
@@ -244,6 +246,7 @@ canvas{display:block;width:100%}
         </div>
         <div class="chartwrap">
           <canvas id="cvK" height="420"></canvas>
+          <canvas id="cvH" class="ovl" height="420"></canvas>
           <div id="tip"></div>
         </div>
       </div>
@@ -331,13 +334,25 @@ async function api(p){
 /* ---------------- canvas ---------------- */
 function fitCanvas(cv){
   const dpr = window.devicePixelRatio||1;
-  const w = cv.clientWidth||600, h = parseInt(cv.getAttribute("height"))||300;
-  cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
-  cv.style.height = h+"px";
+  /* ★ 逻辑高度只读一次，存进 dataset.h。
+     旧版读 cv.getAttribute("height")，而上一轮刚把该属性改成 h*dpr —— 在 150% 缩放
+     （devicePixelRatio=1.5）下，每次重绘高度再乘 1.5：420→630→945→1418→2127px。
+     mousemove 每个像素都触发重绘，于是鼠标一放上去整图瞬间膨胀「跑」掉。
+     dpr=1 时高度恰好不变，所以这个问题在 100% 缩放的机器上完全看不出来。 */
+  let lh = parseInt(cv.dataset.h||"",10);
+  if(!lh){
+    lh = parseInt(cv.getAttribute("height"),10) || 300;
+    cv.dataset.h = lh;
+    cv.setAttribute("height", lh);
+  }
+  const w = Math.max(80, cv.clientWidth||600);
+  const dw = Math.round(w*dpr), dh = Math.round(lh*dpr);
+  if(cv.width!==dw || cv.height!==dh){ cv.width = dw; cv.height = dh; }
+  cv.style.height = lh+"px";
   const g = cv.getContext("2d");
   g.setTransform(dpr,0,0,dpr,0,0);
-  g.clearRect(0,0,w,h);
-  return {g,w,h};
+  g.clearRect(0,0,w,lh);
+  return {g,w,h:lh};
 }
 
 /* ---------------- K线 ---------------- */
@@ -460,19 +475,33 @@ function drawKline(){
   g.fillText("成交额", padL+2, vTop+9);
   if(vmax) g.fillText(yi(vmax), w-padR+5, vTop+9);
 
-  // 十字光标
-  const hv = ST.hover;
-  if(hv && hv.idx>=0 && hv.idx<n){
-    const x = X(hv.idx);
-    g.strokeStyle="rgba(140,165,200,.45)"; g.lineWidth=1; g.setLineDash([3,3]);
-    g.beginPath(); g.moveTo(x,padT); g.lineTo(x,h-18); g.stroke();
-    const y = Math.min(Math.max(hv.y,padT), padT+priceH);
-    g.beginPath(); g.moveTo(padL,y); g.lineTo(w-padR,y); g.stroke();
-    g.setLineDash([]);
-    const v = hi - (y-padT)/priceH*(hi-lo);
-    g.fillStyle="#2a3646"; g.fillRect(w-padR, y-8, 54, 15);
-    g.fillStyle=C.tx; g.fillText(fmt(v,2), w-padR+5, y+3);
-  }
+  // 十字光标改由覆盖层 cvH 画（见 drawHover）：主画布在鼠标移动时一次都不重绘
+  ST.geo = {padL, padR, padT, priceH, bw, n, hi, lo, w, h};
+  drawHover();
+}
+
+/* 十字光标 + 右侧价格标签：只清覆盖层，主画布不动 */
+function drawHover(){
+  const cv = $("#cvH");
+  if(!cv) return;
+  const {g,w,h} = fitCanvas(cv);
+  const geo = ST.geo, hv = ST.hover;
+  if(!geo || !hv || hv.idx<0 || hv.idx>=geo.n) return;
+  const x = geo.padL + geo.bw*(hv.idx+0.5);
+  g.strokeStyle="rgba(140,165,200,.45)"; g.lineWidth=1; g.setLineDash([3,3]);
+  g.beginPath(); g.moveTo(x,geo.padT); g.lineTo(x,h-18); g.stroke();
+  const y = Math.min(Math.max(hv.y,geo.padT), geo.padT+geo.priceH);
+  g.beginPath(); g.moveTo(geo.padL,y); g.lineTo(w-geo.padR,y); g.stroke();
+  g.setLineDash([]);
+  const v = geo.hi - (y-geo.padT)/geo.priceH*(geo.hi-geo.lo);
+  g.fillStyle="#2a3646"; g.fillRect(w-geo.padR, y-8, 54, 15);
+  g.fillStyle=C.tx; g.font="10px monospace";
+  g.fillText(fmt(v,2), w-geo.padR+5, y+3);
+}
+function clearHover(){
+  ST.hover = null;
+  const cv = $("#cvH");
+  if(cv){ const {g,w,h} = fitCanvas(cv); g.clearRect(0,0,w,h); }
 }
 
 /* ---------------- 涨跌分布 ---------------- */
@@ -824,7 +853,7 @@ async function selectStock(code, tries){
   $("#kPos").textContent = pos
     ? `成本 ${fmt(pos.cost,2)}${pos.stop?` / 纪律 ${fmt(pos.stop,2)}`:""}`
     : "";
-  ST.hover = null;
+  clearHover();
   drawKline();
 }
 
@@ -927,20 +956,30 @@ document.addEventListener("click", e=>{
 
 (function bindHover(){
   const cv = $("#cvK"), tip = $("#tip");
+  /* ★ 用 rAF 合帧：一帧最多画一次，且只画覆盖层（旧版每个 mousemove 都全量重绘主画布） */
+  let raf = 0, pend = null;
+  function paint(){
+    raf = 0;
+    const q = pend; pend = null;
+    if(!q) return;
+    ST.hover = q.hv;
+    drawHover();
+    const tw = tip.offsetWidth, th2 = tip.offsetHeight;
+    tip.style.left = Math.min(q.x+14, q.rw-tw-8)+"px";
+    tip.style.top = Math.max(4, Math.min(q.y-th2/2, q.rh-th2-4))+"px";
+  }
   cv.addEventListener("mousemove", ev=>{
     const k = ST.kline;
-    if(!k || !k.ok) return;
+    if(!k || !k.ok || !ST.geo) return;
     const r = cv.getBoundingClientRect();
     const x = ev.clientX-r.left, y = ev.clientY-r.top;
-    const padL=8, padR=60;
-    const plotW = r.width-padL-padR, bw = plotW/k.bars.length;
-    const idx = Math.floor((x-padL)/bw);
-    if(idx<0||idx>=k.bars.length){ tip.style.display="none"; if(ST.hover){ST.hover=null; drawKline();} return; }
-    ST.hover = {idx, y};
-    drawKline();
+    const idx = Math.floor((x-ST.geo.padL)/ST.geo.bw);
+    if(idx<0 || idx>=k.bars.length){
+      tip.style.display="none"; if(ST.hover) clearHover(); return;
+    }
     const b = k.bars[idx];
     const pos = ST.positions.find(p=>p.code===k.code && p.active);
-    let lines = [
+    const lines = [
       b.d,
       "开 "+fmt(b.o,2)+"  高 "+fmt(b.h,2),
       "低 "+fmt(b.l,2)+"  收 "+fmt(b.c,2),
@@ -952,14 +991,10 @@ document.addEventListener("click", e=>{
     if(pos && pos.cost) lines.push("成本 "+fmt(pos.cost,2)+"（"+(b.c>=pos.cost?"浮盈":"浮亏")+"）");
     tip.textContent = lines.join("\n");
     tip.style.display="block";
-    const tw = tip.offsetWidth, th2 = tip.offsetHeight;
-    tip.style.left = Math.min(x+14, r.width-tw-8)+"px";
-    tip.style.top = Math.max(4, Math.min(y-th2/2, r.height-th2-4))+"px";
+    pend = {hv:{idx, y}, x, y, rw:r.width, rh:r.height};
+    if(!raf) raf = requestAnimationFrame(paint);
   });
-  cv.addEventListener("mouseleave", ()=>{
-    tip.style.display="none";
-    if(ST.hover){ ST.hover=null; drawKline(); }
-  });
+  cv.addEventListener("mouseleave", ()=>{ tip.style.display="none"; clearHover(); });
 })();
 
 $("#btnRefresh").addEventListener("click", loadAll);
