@@ -7,7 +7,7 @@
 ## 第一动作
 
 **任何判断或动作前，先读 `AGENT.md`**（内核：主循环唯一来源 · 三锁 · 落点封闭 · 风控权限 · 七入口 I1~I7 · Thesis 认知主线 · 三问准入 · 骨架/插件纪律）。
-`AGENT.md` 已落盘（0.11 · v1.2），同时是 `tools/fs/paths.py` 的项目根锚文件。
+`AGENT.md` 已落盘（0.11 · 当前 **v1.6**，以文件内 §11 变更史末行为准；本指针不重复记版本号），同时是 `tools/fs/paths.py` 的项目根锚文件。
 
 **追平优先**：若游标落后于今天（`python tools/fs/wakeup.py` 一看便知），先跑
 `python tools/fs/wakeup.py --wake <today>` 把时间对齐，**再**谈判断——别拿旧时间做新判断。

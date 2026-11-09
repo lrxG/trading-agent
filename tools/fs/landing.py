@@ -86,6 +86,7 @@ EXEMPTIONS = (
      "patterns": ("data/snapshot/", "data/raw/", "data/state/", "data/learning/",
                   "data/generated/sim/", "data/generated/cases.jsonl",
                   "data/generated/h_board.md", "data/decision_card.md",
+                  "data/generated/close_audit_<date>.json",
                   "memory/", ".workbuddy/"),
      "item": "0.1 / 0.2 / 0.5 / 0.12 / 0.13 / 0.15 / 0.18 / 4.2",
      "judge": "判据 = 记的是「知识」还是「非知识」：状态（游标/池/持仓/进度/看板）与"
@@ -500,6 +501,16 @@ WRITE_ENTRYPOINTS = (
     ("mainline_scan.py", "main", ("data/generated/reports/",),
      "主升浪/产业趋势扫描产物（2026-11-02）：五维机械打分 + 梯队证据，仅 --execute 才写 md；"
      "落点 = X1 交付物（给人看，非知识落点）"),
+    ("close_audit.py", "main", ("data/generated/close_audit_<date>.json",),
+     "收盘体检报告派生视图（2026-11-05 接入 daily_pipeline 第 16 步 · 2026-11-09 补登记）："
+     "`--json` 时写 data/generated/close_audit_<date>.json。**衍生视图，不是知识落点**"
+     "（不进账本、不改参数）；文件名按日动态拼装 ⇒ 静态不可解析，须登记"),
+    ("fetch_announcements.py", "main",
+     ("data/raw/<date>/announcements.jsonl", "data/raw/<date>/ann_summary.json"),
+     "全市场公告原始抓取（2026-11-09 · trade-rules §一d 实证数据源 · 同日补登记）："
+     "写 data/raw/<date>/announcements.jsonl + 分桶统计 ann_summary.json。"
+     "**data/raw 是原始层，非知识落点**（未经事件识别不进账本）；"
+     "rd 由 _ROOT+date 派生 ⇒ 静态不可解析，须登记"),
 )
 
 # 代码目录（执行层 Python；不属知识落点）
