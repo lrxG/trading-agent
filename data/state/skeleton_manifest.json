@@ -1,6 +1,6 @@
 {
-  "skeleton_version": "1.5.16",
-  "updated_at": "2026-11-02",
+  "skeleton_version": "1.5.17",
+  "updated_at": "2026-11-09",
   "files": [
     {
       "id": "paths.py",
@@ -65,7 +65,7 @@
     {
       "id": "C0.landing",
       "target": "file:tools/fs/landing.py",
-      "sha256": "sha256:0e67b7cf76d8ec2c2f9fd2cf141f23c6a0614b6ab098952d88343266f6476aac",
+      "sha256": "sha256:344e6ab44feae3dc34c092b93f780c7c358150e4c62901971b386caa0f90596d",
       "contract": "0.7 落点封闭（5 落点 + 5 豁免 · 可反查登记表）"
     },
     {
