@@ -163,8 +163,14 @@ def assert_tradeable(hid, path=None):
 
 
 def _parse_plan_h_table(plan_path):
-    """解析盘前预案 md ⑥节 H 表（五列：编号|预测内容|验证指标|有效时间窗|失效条件）。
-    只在「## ⑥」节内解析（其他节的表格可能引用 H 编号，严禁误立账）；行首必须为 H 编号。"""
+    """解析盘前预案 md 的 H 表（五列：编号|预测内容|验证指标|有效时间窗|失效条件）。
+
+    ★ 2026-11-10 修正口径冲突：`templates/盘前预案模板.md` 把假设写在 **⑧ 假设与盲区**，
+      而本函数原先只认 ⑥（⑥在现行模板里是「情景」）。结果现行模板产出的预案
+      **一条 H 都立不了账**——h_ledger 的核心作用（防盘中被无痕改写）等于失效。
+      现改为 ⑥、⑧ 都扫，且不再 break（原实现遇到下一个标题就退出，只能读第一节）。
+
+    其他节的表格可能引用 H 编号，故仍限定在这两节内；行首必须为 H 编号才算。"""
     import re
     if not os.path.exists(plan_path):
         raise LedgerError("预案文件不存在：%s" % plan_path)
@@ -172,15 +178,19 @@ def _parse_plan_h_table(plan_path):
     mdate = re.search(r"(\d{4})-(\d{2})-(\d{2})", src)
     year = mdate.group(1) if mdate else "????"
     lines = open(plan_path, encoding="utf-8").read().splitlines()
-    # 定位 ⑥ 节
+    # 定位 ⑥ 或 ⑧ 节（两节都收，遇其他标题只退出本节、不终止扫描）
+    # ★ 标题形如「## 🧪 ⑧ 假设与盲区」——节号前有 emoji，正则必须允许前缀，
+    #   否则连模板自己生成的标题都匹配不到（原 `^#{2,3}\s+⑥` 正是此错）。
+    sec_re = re.compile(r"^#{2,3}\s+.*?[⑥⑧]")
     in_sec = False
     sec_lines = []
     for line in lines:
-        if re.match(r"^#{2,3}\s+⑥", line):
+        if sec_re.match(line):
             in_sec = True
             continue
-        if in_sec and re.match(r"^#{2,3}\s+", line):
-            break
+        if re.match(r"^#{2,3}\s+", line):
+            in_sec = False
+            continue
         if in_sec:
             sec_lines.append(line)
     rows = []
@@ -189,9 +199,14 @@ def _parse_plan_h_table(plan_path):
         if not line.startswith("|"):
             continue
         cells = [c.strip() for c in line.strip("|").split("|")]
+        # 四列体例（现行模板 ⑧ 节：编号|预测|验证|失效）→ 补默认验证窗，否则一条都立不了账
+        if len(cells) == 4:
+            cells.insert(3, "T+1 收盘")
         if len(cells) < 5:
             continue
-        m = re.match(r"^H-(\d{4})([a-z]+)$", cells[0])
+        # 编号常被写成 **H-1109a**（加粗体例），行首正则会被星号挡住 → 先剥 markdown 标记
+        hid_cell = cells[0].strip().strip("*").strip()
+        m = re.match(r"^H-(\d{4})([a-z]+)$", hid_cell)
         if not m:
             continue
         full = "H-%s%s%s" % (year, m.group(1), m.group(2))
